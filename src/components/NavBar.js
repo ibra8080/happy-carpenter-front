@@ -2,10 +2,11 @@ import React from 'react';
 import { Navbar, Nav, Container } from 'react-bootstrap';
 import logo from '../asset/logo.png';
 import { Link } from 'react-router-dom';
+import styles from '../styles/NavBar.module.css';
 
 const NavBar = () => {
   return (
-    <Navbar bg="light" expand="lg">
+    <Navbar className={styles.NavBar} bg="light" expand="lg">
       <Container>
         <Navbar.Brand as={Link} to="/">
           <img src={logo} alt="logo" height="45" />

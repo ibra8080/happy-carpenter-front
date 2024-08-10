@@ -5,12 +5,12 @@ import NavBar from './components/NavBar';
 import Home from './components/Home';
 import LoginForm from './components/LoginForm';
 import RegisterForm from './components/RegisterForm';
-import './App.css';
+import styles from './App.module.css';
 
 function App() {
   return (
     <Router>
-      <div className="App">
+      <div className={styles.App}>
         <NavBar />
         <Routes>
           <Route path="/" element={<Home />} />
