@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { axiosReq } from "../../api/axiosDefaults";
 
 import styles from "../../styles/SignInUpForm.module.css";
 import btnStyles from "../../styles/Button.module.css";
@@ -14,15 +15,15 @@ import {
   Container,
   Alert,
 } from "react-bootstrap";
-import axios from "axios";
 
 const SignUpForm = () => {
     const [signUpData, setSignUpData] = useState({
       username: "",
+      email: "",
       password1: "",
       password2: "",
     });
-    const { username, password1, password2 } = signUpData;
+    const { username, email, password1, password2 } = signUpData;
   
     const [errors, setErrors] = useState({});
   
@@ -38,9 +39,12 @@ const SignUpForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await axios.post("/dj-rest-auth/registration/", signUpData);
+      console.log('Sending registration data:', signUpData);
+      const response = await axiosReq.post("/dj-rest-auth/registration/", signUpData);
+      console.log('Registration successful:', response.data);
       navigate("/signin");
     } catch (err) {
+      console.error('Registration error:', err.response?.data);
       setErrors(err.response?.data);
     }
   };
@@ -64,6 +68,23 @@ const SignUpForm = () => {
               />
             </Form.Group>
             {errors.username?.map((message, idx) => (
+              <Alert variant="warning" key={idx}>
+                {message}
+              </Alert>
+            ))}
+
+          <Form.Group controlId="email">
+            <Form.Label className="d-none">Email (optional)</Form.Label>
+            <Form.Control
+              className={styles.Input}
+              type="email"
+              placeholder="Email (optional)"
+              name="email"
+              value={email}
+              onChange={handleChange}
+            />
+            </Form.Group>
+            {errors.email?.map((message, idx) => (
               <Alert variant="warning" key={idx}>
                 {message}
               </Alert>
