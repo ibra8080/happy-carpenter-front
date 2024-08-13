@@ -1,46 +1,82 @@
 .Row {
-    height: calc(100vh - 81px);
-  }
-  .Input {
-    background: #ffffff;
-    border: 1px solid #f0f1f9;
-    box-sizing: border-box;
-    border-radius: 2px;
-    color: #7177a1;
-    text-align: center;
-    padding: 10px;
-  }
-  
-  .Header {
-    font-style: normal;
-    font-weight: bold;
-    font-size: 16px;
-    line-height: 19px;
-    text-align: center;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: #2142b2;
-  }
-  
-  .Link {
-    text-decoration: none;
-    text-align: center;
-    display: block;
-    margin: auto;
-  }
-  
-  .Link span {
-    color: #ff9254;
-  }
-  
-  .Container {
-    padding: 30px 10px;
-  }
-  
-  .SignInCol {
-    height: 320px;
-  }
-  
-  .SignUpCol {
-    height: 375px;
-  }
+  min-height: calc(100vh - 81px);
+  background-color: #fffcec;
+}
+
+.Input {
+  background: #ffffff;
+  border: 1px solid #D69723;
+  box-sizing: border-box;
+  border-radius: 4px;
+  color: #3f3f3f;
+  text-align: left;
+  padding: 10px;
+  margin-bottom: 15px;
+}
+
+.Header {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 19px;
+  text-align: center;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #D69723;
+  margin-bottom: 20px;
+}
+
+.Link {
+  text-decoration: none;
+  text-align: center;
+  display: block;
+  margin: auto;
+  color: #3f3f3f;
+}
+
+.Link span {
+  color: #a60d0d;
+}
+
+.Container {
+  padding: 30px 10px;
+  background-color: #fffcec;
+}
+
+.SignInCol, .SignUpCol {
+  height: auto;
+}
+
+.FormLabel {
+  color: #3f3f3f;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.FileInput {
+  display: none;
+}
+
+.FileInputLabel {
+  display: inline-block;
+  padding: 10px 15px;
+  background-color: #D69723;
+  color: #fffcec;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.FileInputLabel:hover {
+  background-color: #a60d0d;
+}
+
+.ImagePreview {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  margin-top: 10px;
+  border-radius: 4px;
+}

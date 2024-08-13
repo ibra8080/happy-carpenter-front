@@ -9,7 +9,6 @@ import appStyles from "../../App.module.css";
 import {
   Form,
   Button,
-  Image,
   Col,
   Row,
   Container,
@@ -30,6 +29,7 @@ const SignUpForm = () => {
       portfolio_url: "",
       interests: [],
       address: "",
+      profile_image: null,
     });
     const { 
       username, email, password1, password2, first_name, last_name,
@@ -37,22 +37,41 @@ const SignUpForm = () => {
     } = signUpData;
   
     const [errors, setErrors] = useState({});
+    const [profileImagePreview, setProfileImagePreview] = useState(null);
   
     const navigate = useNavigate();
     
   const handleChange = (event) => {
-    const { name, value } = event.target;
-    setSignUpData({
-      ...signUpData,
-      [name]: name === 'interests' ? value.split(',').map(item => item.trim()) : value,
-    });
+    const { name, value, type, files } = event.target;
+    if (type === "file") {
+      setSignUpData({
+        ...signUpData,
+        [name]: files[0],
+      });
+      setProfileImagePreview(URL.createObjectURL(files[0]));
+    } else {
+      setSignUpData({
+        ...signUpData,
+        [name]: name === 'interests' ? value.split(',').map(item => item.trim()) : value,
+      });
+    }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const formData = new FormData();
+    for (const [key, value] of Object.entries(signUpData)) {
+      if (key === "interests") {
+        formData.append(key, JSON.stringify(value));
+      } else if (key === "profile_image" && value) {
+        formData.append(key, value, value.name);
+      } else {
+        formData.append(key, value);
+      }
+    }
     try {
-      console.log('Sending registration data:', signUpData);
-      const response = await axiosReq.post("/dj-rest-auth/registration/", signUpData);
+      console.log('Sending registration data:', formData);
+      const response = await axiosReq.post("/dj-rest-auth/registration/", formData);
       console.log('Registration successful:', response.data);
       navigate("/signin");
     } catch (err) {
@@ -63,7 +82,7 @@ const SignUpForm = () => {
 
   return (
     <Row className={styles.Row}>
-      <Col className="my-auto py-2 p-md-2" md={6}>
+      <Col className="my-auto py-2 p-md-2">
         <Container className={`${appStyles.Content} p-4 `}>
           <h1 className={styles.Header}>sign up</h1>
 
@@ -166,6 +185,7 @@ const SignUpForm = () => {
             <Form.Group controlId="user_type">
               <Form.Label>User Type</Form.Label>
               <Form.Control
+                className={styles.Input}
                 as="select"
                 name="user_type"
                 value={user_type}
@@ -185,6 +205,7 @@ const SignUpForm = () => {
                 <Form.Group controlId="years_of_experience">
                   <Form.Label>Years of Experience</Form.Label>
                   <Form.Control
+                    className={styles.Input}
                     type="number"
                     name="years_of_experience"
                     value={years_of_experience}
@@ -199,6 +220,7 @@ const SignUpForm = () => {
                 <Form.Group controlId="specialties">
                   <Form.Label>Specialties</Form.Label>
                   <Form.Control
+                    className={styles.Input}
                     type="text"
                     name="specialties"
                     value={specialties}
@@ -213,6 +235,7 @@ const SignUpForm = () => {
                 <Form.Group controlId="portfolio_url">
                   <Form.Label>Portfolio URL</Form.Label>
                   <Form.Control
+                    className={styles.Input}
                     type="url"
                     name="portfolio_url"
                     value={portfolio_url}
@@ -228,6 +251,7 @@ const SignUpForm = () => {
             <Form.Group controlId="interests">
               <Form.Label>Interests (comma-separated)</Form.Label>
               <Form.Control
+                className={styles.Input}
                 type="text"
                 name="interests"
                 value={interests.join(', ')}
@@ -241,6 +265,7 @@ const SignUpForm = () => {
             <Form.Group controlId="address">
               <Form.Label>Address</Form.Label>
               <Form.Control
+                className={styles.Input}
                 type="text"
                 name="address"
                 value={address}
@@ -248,6 +273,28 @@ const SignUpForm = () => {
               />
             </Form.Group>
             {errors.address?.map((message, idx) => (
+              <Alert variant="warning" key={idx}>{message}</Alert>
+            ))}
+
+
+          <Form.Group controlId="profile_image">
+              <Form.Label className={styles.FileInputLabel}>Upload Profile Image</Form.Label>
+              <Form.Control
+                className={styles.FileInput}
+                type="file"
+                name="profile_image"
+                accept="image/*"
+                onChange={handleChange}
+              />
+            </Form.Group>
+            {profileImagePreview && (
+              <img
+                src={profileImagePreview}
+                alt="Profile preview"
+                style={{ width: '100px', height: '100px', objectFit: 'cover', marginTop: '10px' }}
+              />
+            )}
+            {errors.profile_image?.map((message, idx) => (
               <Alert variant="warning" key={idx}>{message}</Alert>
             ))}
 
@@ -270,15 +317,6 @@ const SignUpForm = () => {
             Already have an account? <span>Sign in</span>
           </Link>
         </Container>
-      </Col>
-      <Col
-        md={6}
-        className={`my-auto d-none d-md-block p-2 ${styles.SignUpCol}`}
-      >
-        <Image
-          className={`${appStyles.FillerImage}`}
-          src={"https://codeinstitute.s3.amazonaws.com/AdvancedReact/hero2.jpg"}
-        />
       </Col>
     </Row>
   );
