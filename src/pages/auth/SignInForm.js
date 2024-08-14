@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { axiosReq } from "../../api/axiosDefaults";
 import Form from "react-bootstrap/Form";
@@ -12,7 +12,10 @@ import styles from "../../styles/SignInUpForm.module.css";
 import btnStyles from "../../styles/Button.module.css";
 import appStyles from "../../App.module.css";
 
+import { SetCurrentUserContext } from "../../App";
+
 function SignInForm() {
+  const setCurrentUser = useContext(SetCurrentUserContext);
   const [signInData, setSignInData] = useState({
     username: "",
     password: "",
@@ -25,8 +28,7 @@ function SignInForm() {
     event.preventDefault();
     try {
       const { data } = await axiosReq.post("/dj-rest-auth/login/", signInData);
-      console.log("Login successful", data);
-      // Here you would typically store the token
+      setCurrentUser(data.user);
       localStorage.setItem("authToken", data.access);
       navigate("/");
     } catch (err) {
