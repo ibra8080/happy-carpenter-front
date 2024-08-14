@@ -2,6 +2,8 @@ import React from "react";
 import styles from "../styles/Avatar.module.css";
 
 const Avatar = ({ src, height = 45, text }) => {
+  console.log("Avatar src:", src);
+
   return (
     <span>
       <img
@@ -10,6 +12,10 @@ const Avatar = ({ src, height = 45, text }) => {
         height={height}
         width={height}
         alt="avatar"
+        onError={(e) => {
+          e.target.onerror = null;
+          e.target.src = "/default-profile.png";
+        }}
       />
       {text}
     </span>
@@ -17,4 +23,3 @@ const Avatar = ({ src, height = 45, text }) => {
 };
 
 export default Avatar;
-
