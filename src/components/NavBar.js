@@ -1,15 +1,15 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Navbar, Container, Nav } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
-import { CurrentUserContext, SetCurrentUserContext } from "../App";
+import { useCurrentUser, useSetCurrentUser } from "../contexts/CurrentUserContext";
 import axios from "axios";
 import Avatar from "./Avatar";
 import logo from "../assets/logo.png";
 import styles from "../styles/NavBar.module.css";
 
 const NavBar = () => {
-  const currentUser = useContext(CurrentUserContext);
-  const setCurrentUser = useContext(SetCurrentUserContext);
+  const currentUser = useCurrentUser();
+  const setCurrentUser = useSetCurrentUser();
 
   const handleSignOut = async () => {
     try {
@@ -20,15 +20,31 @@ const NavBar = () => {
     }
   };
 
+  const addPostIcon = (
+    <NavLink
+      className={styles.NavLink}
+      activeClassName={styles.Active}
+      to="/posts/create"
+    >
+      <i className="far fa-plus-square"></i>Add post
+    </NavLink>
+  );
+
   const loggedInIcons = (
     <>
-      <NavLink 
-        to={`/profiles/${currentUser?.profile_id}`} 
-        className={({ isActive }) => 
-          `${styles.NavLink} ${isActive ? styles.Active : ""}`
-        }
+      <NavLink
+        className={styles.NavLink}
+        activeClassName={styles.Active}
+        to="/feed"
       >
-        <Avatar src={currentUser?.profile_image} text={currentUser?.username} height={40} />
+        <i className="fas fa-stream"></i>Feed
+      </NavLink>
+      <NavLink
+        className={styles.NavLink}
+        activeClassName={styles.Active}
+        to="/liked"
+      >
+        <i className="fas fa-heart"></i>Liked
       </NavLink>
       <NavLink 
         to="/" 
@@ -37,6 +53,12 @@ const NavBar = () => {
       >
         <i className="fas fa-sign-out-alt"></i>Sign out
       </NavLink>
+      <NavLink 
+        to={`/profiles/${currentUser?.profile_id}`} 
+        className={styles.NavLink}
+      >
+        <Avatar src={currentUser?.profile_image} text="Profile" height={40} />
+      </NavLink>
     </>
   );
 
@@ -44,17 +66,15 @@ const NavBar = () => {
     <>
       <NavLink 
         to="/signin" 
-        className={({ isActive }) => 
-          `${styles.NavLink} ${isActive ? styles.Active : ""}`
-        }
+        className={styles.NavLink}
+        activeClassName={styles.Active}
       >
         <i className="fas fa-sign-in-alt"></i>Sign in
       </NavLink>
       <NavLink 
         to="/signup" 
-        className={({ isActive }) => 
-          `${styles.NavLink} ${isActive ? styles.Active : ""}`
-        }
+        className={styles.NavLink}
+        activeClassName={styles.Active}
       >
         <i className="fas fa-user-plus"></i>Sign up
       </NavLink>
@@ -69,14 +89,15 @@ const NavBar = () => {
             <img src={logo} alt="logo" height="45" />
           </Navbar.Brand>
         </NavLink>
+        {currentUser && addPostIcon}
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ml-auto text-left">
             <NavLink 
               to="/" 
-              className={({ isActive }) => 
-                `${styles.NavLink} ${isActive ? styles.Active : ""}`
-              }
+              className={styles.NavLink}
+              activeClassName={styles.Active}
+              exact
             >
               <i className="fas fa-home"></i>Home
             </NavLink>

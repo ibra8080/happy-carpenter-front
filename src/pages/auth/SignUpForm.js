@@ -63,14 +63,15 @@ const SignUpForm = () => {
     for (const [key, value] of Object.entries(signUpData)) {
       if (key === "interests") {
         formData.append(key, JSON.stringify(value));
-      } else if (key === "profile_image" && value) {
+      } else if (key === "profile_image" && value instanceof File) {
         formData.append(key, value, value.name);
       } else {
         formData.append(key, value);
       }
     }
+    
     try {
-      console.log('Sending registration data:', formData);
+      console.log('Sending registration data:', Object.fromEntries(formData));
       const response = await axiosReq.post("/dj-rest-auth/registration/", formData);
       console.log('Registration successful:', response.data);
       navigate("/signin");
