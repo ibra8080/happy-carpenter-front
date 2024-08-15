@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { axiosReq } from "../../api/axiosDefaults";
+import { axiosReq, setAuthorizationHeader } from "../../api/axiosDefaults";
 import { useSetCurrentUser } from "../../contexts/CurrentUserContext";
 import Form from "react-bootstrap/Form";
 import Alert from "react-bootstrap/Alert";
@@ -12,8 +12,11 @@ import Container from "react-bootstrap/Container";
 import styles from "../../styles/SignInUpForm.module.css";
 import btnStyles from "../../styles/Button.module.css";
 import appStyles from "../../App.module.css";
+import { useRedirect } from "../../hooks/useRedirect";
+
 
 function SignInForm() {
+  useRedirect("loggedIn");
   const setCurrentUser = useSetCurrentUser();
   const [signInData, setSignInData] = useState({
     username: "",
@@ -27,12 +30,15 @@ function SignInForm() {
     event.preventDefault();
     try {
       const { data } = await axiosReq.post("/dj-rest-auth/login/", signInData);
+      console.log("Login response:", data);
       setCurrentUser(data.user);
+      setAuthorizationHeader(data);
       navigate("/");
     } catch (err) {
+      console.log("Login error:", err.response?.data);
       setErrors(err.response?.data);
     }
-  };
+  };  
   
 
   const handleChange = (event) => {

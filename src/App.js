@@ -11,8 +11,9 @@ import SignInForm from "./pages/auth/SignInForm";
 
 function App() {
   return (
-    <CurrentUserProvider>
-      <Router>
+    <Router>
+      <CurrentUserProvider>
+      
         <div className={styles.App}>
           <NavBar />
           <Container className={styles.Main}>
@@ -24,8 +25,9 @@ function App() {
             </Routes>
           </Container>
         </div>
-      </Router>
-    </CurrentUserProvider>
+      </CurrentUserProvider>
+    </Router>
+    
   );
 }
 
