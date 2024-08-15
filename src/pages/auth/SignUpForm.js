@@ -5,6 +5,8 @@ import { axiosReq } from "../../api/axiosDefaults";
 import styles from "../../styles/SignInUpForm.module.css";
 import btnStyles from "../../styles/Button.module.css";
 import appStyles from "../../App.module.css";
+import { useSetCurrentUser } from "../../contexts/CurrentUserContext";
+
 
 import {
   Form,
@@ -16,6 +18,7 @@ import {
 } from "react-bootstrap";
 
 const SignUpForm = () => {
+  const setCurrentUser = useSetCurrentUser();
     const [signUpData, setSignUpData] = useState({
       username: "",
       email: "",
@@ -71,13 +74,25 @@ const SignUpForm = () => {
     }
     
     try {
-      console.log('Sending registration data:', Object.fromEntries(formData));
       const response = await axiosReq.post("/dj-rest-auth/registration/", formData);
-      console.log('Registration successful:', response.data);
-      navigate("/signin");
+      console.log("Registration response:", response.data);
+      
+      if (response.data.user) {
+        // Assuming the backend returns the user data including the profile image URL
+        setCurrentUser(response.data.user);
+        navigate("/");
+      } else {
+        console.error("Unexpected response structure:", response.data);
+        setErrors({ non_field_errors: ["An unexpected error occurred. Please try again."] });
+      }
     } catch (err) {
-      console.error('Registration error:', err.response?.data);
-      setErrors(err.response?.data);
+      console.error('Registration error:', err);
+      if (err.response) {
+        console.error('Error response:', err.response.data);
+        setErrors(err.response.data);
+      } else {
+        setErrors({ non_field_errors: ["An unexpected error occurred. Please try again."] });
+      }
     }
   };
 

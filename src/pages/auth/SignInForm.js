@@ -28,13 +28,12 @@ function SignInForm() {
     try {
       const { data } = await axiosReq.post("/dj-rest-auth/login/", signInData);
       setCurrentUser(data.user);
-      localStorage.setItem("authToken", data.access);
       navigate("/");
     } catch (err) {
-      console.log("Login error", err.response?.data);
       setErrors(err.response?.data);
     }
   };
+  
 
   const handleChange = (event) => {
     setSignInData({
