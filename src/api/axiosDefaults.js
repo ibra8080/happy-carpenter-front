@@ -7,6 +7,40 @@ axios.defaults.withCredentials = true;
 export const axiosReq = axios.create();
 export const axiosRes = axios.create();
 
+axiosReq.interceptors.request.use(
+  async config => {
+    const accessToken = localStorage.getItem('access_token');
+    if (accessToken) {
+      config.headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);
+
+axiosReq.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      const refreshToken = localStorage.getItem('refresh_token');
+      try {
+        const { data } = await axios.post('/dj-rest-auth/token/refresh/', { refresh: refreshToken });
+        localStorage.setItem('access_token', data.access);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${data.access}`;
+        return axiosReq(originalRequest);
+      } catch (refreshError) {
+        console.log('Refresh token error', refreshError);
+        // Handle refresh token error (e.g., logout user, redirect to login)
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const setAuthorizationHeader = (data) => {
   if (data?.access) {
     localStorage.setItem('access_token', data.access);
