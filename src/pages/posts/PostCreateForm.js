@@ -128,8 +128,8 @@ function PostCreateForm() {
             <Form.Group className="text-center">
               {image ? (
                 <>
-                  <figure>
-                    <Image className={appStyles.Image} src={image} rounded />
+                  <figure className={styles.ImageContainer}>
+                    <Image className={styles.Image} src={image} alt="Post image" />
                   </figure>
                   <div>
                     <Form.Label
