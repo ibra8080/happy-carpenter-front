@@ -14,7 +14,6 @@ import btnStyles from "../../styles/Button.module.css";
 import appStyles from "../../App.module.css";
 import { useRedirect } from "../../hooks/useRedirect";
 
-
 function SignInForm() {
   useRedirect("loggedIn");
   const setCurrentUser = useSetCurrentUser();
@@ -33,13 +32,14 @@ function SignInForm() {
       console.log("Login response:", data);
       setCurrentUser(data.user);
       setAuthorizationHeader(data);
+      localStorage.setItem('access_token', data.access);
+      localStorage.setItem('refresh_token', data.refresh);
       navigate("/");
     } catch (err) {
       console.log("Login error:", err.response?.data);
       setErrors(err.response?.data);
     }
-  };  
-  
+  };
 
   const handleChange = (event) => {
     setSignInData({
@@ -63,6 +63,7 @@ function SignInForm() {
                 className={styles.Input}
                 value={username}
                 onChange={handleChange}
+                autocomplete="username"
               />
             </Form.Group>
             {errors.username?.map((message, idx) => (
@@ -80,6 +81,7 @@ function SignInForm() {
                 className={styles.Input}
                 value={password}
                 onChange={handleChange}
+                autocomplete="current-password"
               />
             </Form.Group>
             {errors.password?.map((message, idx) => (
