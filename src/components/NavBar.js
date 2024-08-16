@@ -7,17 +7,21 @@ import Avatar from "./Avatar";
 import logo from "../assets/logo.png";
 import styles from "../styles/NavBar.module.css";
 import useClickOutsideToggle from "../hooks/useClickOutsideToggle";
+import { removeTokens } from "../contexts/CurrentUserContext";
+import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
   const currentUser = useCurrentUser();
   const setCurrentUser = useSetCurrentUser();
-
+  const navigate = useNavigate();
   const { expanded, setExpanded, ref } = useClickOutsideToggle();
 
   const handleSignOut = async () => {
     try {
       await axios.post("dj-rest-auth/logout/");
       setCurrentUser(null);
+      removeTokens();
+      navigate("/signin");
     } catch (err) {
       console.log(err);
     }
@@ -26,7 +30,6 @@ const NavBar = () => {
   const addPostIcon = (
     <NavLink
       className={styles.NavLink}
-      activeClassName={styles.Active}
       to="/posts/create"
       onClick={() => setExpanded(false)}
     >
@@ -38,7 +41,6 @@ const NavBar = () => {
     <>
       <NavLink
         className={styles.NavLink}
-        activeClassName={styles.Active}
         to="/feed"
         onClick={() => setExpanded(false)}
       >
@@ -46,7 +48,6 @@ const NavBar = () => {
       </NavLink>
       <NavLink
         className={styles.NavLink}
-        activeClassName={styles.Active}
         to="/liked"
         onClick={() => setExpanded(false)}
       >
@@ -77,7 +78,6 @@ const NavBar = () => {
       <NavLink 
         to="/signin" 
         className={styles.NavLink}
-        activeClassName={styles.Active}
         onClick={() => setExpanded(false)}
       >
         <i className="fas fa-sign-in-alt"></i>Sign in
@@ -85,7 +85,6 @@ const NavBar = () => {
       <NavLink 
         to="/signup" 
         className={styles.NavLink}
-        activeClassName={styles.Active}
         onClick={() => setExpanded(false)}
       >
         <i className="fas fa-user-plus"></i>Sign up
@@ -112,8 +111,6 @@ const NavBar = () => {
             <NavLink 
               to="/" 
               className={styles.NavLink}
-              activeClassName={styles.Active}
-              exact
               onClick={() => setExpanded(false)}
             >
               <i className="fas fa-home"></i>Home

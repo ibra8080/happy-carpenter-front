@@ -1,7 +1,7 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { axiosReq, axiosRes } from "../api/axiosDefaults";
-import { useNavigate } from "react-router-dom";  // Updated import
+import { useNavigate } from "react-router-dom";
 
 export const CurrentUserContext = createContext();
 export const SetCurrentUserContext = createContext();
@@ -11,7 +11,7 @@ export const useSetCurrentUser = () => useContext(SetCurrentUserContext);
 
 export const CurrentUserProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
-  const navigate = useNavigate();  // Using useNavigate instead of useHistory
+  const navigate = useNavigate();
 
   const handleMount = async () => {
     try {
@@ -26,47 +26,28 @@ export const CurrentUserProvider = ({ children }) => {
     handleMount();
   }, []);
 
-  useMemo(() => {
-    axiosReq.interceptors.request.use(
-      async (config) => {
-        try {
-          await axios.post("/dj-rest-auth/token/refresh/");
-        } catch (err) {
-          setCurrentUser((prevCurrentUser) => {
-            if (prevCurrentUser) {
-              navigate("/signin");  // Using navigate instead of history.push
-            }
-            return null;
-          });
-          return config;
+  useEffect(() => {
+    const refreshTokenInterceptor = axiosReq.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        if (error.response?.status === 401) {
+          try {
+            await axios.post("/dj-rest-auth/token/refresh/");
+            return axiosReq(error.config);
+          } catch (refreshError) {
+            setCurrentUser(null);
+            removeTokens();
+            navigate("/signin");
+          }
         }
-        return config;
-      },
-      (err) => {
-        return Promise.reject(err);
+        return Promise.reject(error);
       }
     );
 
-    axiosRes.interceptors.response.use(
-      (response) => response,
-      async (err) => {
-        if (err.response?.status === 401) {
-          try {
-            await axios.post("/dj-rest-auth/token/refresh/");
-          } catch (err) {
-            setCurrentUser((prevCurrentUser) => {
-              if (prevCurrentUser) {
-                navigate("/signin");  // Using navigate instead of history.push
-              }
-              return null;
-            });
-          }
-          return axios(err.config);
-        }
-        return Promise.reject(err);
-      }
-    );
-  }, [navigate]);  // Updated dependency
+    return () => {
+      axiosReq.interceptors.response.eject(refreshTokenInterceptor);
+    };
+  }, [navigate]);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -75,4 +56,11 @@ export const CurrentUserProvider = ({ children }) => {
       </SetCurrentUserContext.Provider>
     </CurrentUserContext.Provider>
   );
+};
+
+export const removeTokens = () => {
+  localStorage.removeItem('access_token');
+  localStorage.removeItem('refresh_token');
+  delete axiosReq.defaults.headers.common["Authorization"];
+  delete axiosRes.defaults.headers.common["Authorization"];
 };
