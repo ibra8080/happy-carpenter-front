@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Form, Button, Row, Col, Container, Alert, Image } from "react-bootstrap";
 import styles from "../../styles/PostCreateEditForm.module.css";
 import appStyles from "../../App.module.css";
@@ -8,7 +8,7 @@ import { axiosReq } from "../../api/axiosDefaults";
 import Asset from "../../components/Asset";
 import { useRedirect } from "../../hooks/useRedirect";
 import { useCurrentUser } from "../../contexts/CurrentUserContext";
-import upload from "../../assets/upload.png";
+import Upload from "../../assets/upload.png";
 
 function PostCreateForm() {
   useRedirect("loggedIn");
@@ -22,6 +22,7 @@ function PostCreateForm() {
   const { title, content, image } = postData;
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
+  const imageInput = useRef(null);
 
   useEffect(() => {
     if (currentUser === null) {
@@ -54,7 +55,9 @@ function PostCreateForm() {
 
     formData.append("title", title);
     formData.append("content", content);
-    formData.append("image", image);
+    if (imageInput?.current?.files[0]) {
+      formData.append("image", imageInput.current.files[0]);
+    }
 
     try {
       const { data } = await axiosReq.post("/posts/", formData);
@@ -106,7 +109,10 @@ function PostCreateForm() {
       >
         cancel
       </Button>
-      <Button className={`${btnStyles.Button} ${btnStyles.Blue}`} type="submit">
+      <Button 
+        className={`${btnStyles.Button} ${btnStyles.Blue}`} 
+        type="submit"
+      >
         create
       </Button>
     </div>
@@ -115,12 +121,10 @@ function PostCreateForm() {
   if (isLoading) return <Asset spinner />;
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <Row>
+    <Form onSubmit={handleSubmit} className={`${styles.Form} ${appStyles.App}`}>
+      <Row className={styles.Content}>
         <Col className="py-2 p-0 p-md-2" md={7} lg={8}>
-          <Container
-            className={`${appStyles.Content} ${styles.Container} d-flex flex-column justify-content-center`}
-          >
+          <Container className={`${appStyles.Content} ${styles.Container}`}>
             <Form.Group className="text-center">
               {image ? (
                 <>
@@ -137,21 +141,26 @@ function PostCreateForm() {
                   </div>
                 </>
               ) : (
-                <Form.Label
-                  className="d-flex justify-content-center"
-                  htmlFor="image-upload"
-                >
-                  <Asset
-                    src={upload}
-                    message="Click or tap to upload an image"
-                  />
-                </Form.Label>
+                <div className={styles.UploadContainer}>
+                  <Asset src={Upload} message="Click or tap to upload an image" />
+                  <div className={styles.FileInputContainer}>
+                    <Form.Label
+                      className={`${btnStyles.Button} ${btnStyles.Blue} btn`}
+                      htmlFor="image-upload"
+                    >
+                      Choose file
+                    </Form.Label>
+                    <span>{image ? image.name : "No file chosen"}</span>
+                  </div>
+                </div>
               )}
 
               <Form.File
                 id="image-upload"
                 accept="image/*"
                 onChange={handleChangeImage}
+                ref={imageInput}
+                style={{ display: 'none' }}
               />
             </Form.Group>
             {errors?.image?.map((message, idx) => (
