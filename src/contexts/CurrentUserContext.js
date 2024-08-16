@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { axiosReq, axiosRes } from "../api/axiosDefaults";
 import { useNavigate } from "react-router-dom";
@@ -63,4 +63,6 @@ export const removeTokens = () => {
   localStorage.removeItem('refresh_token');
   delete axiosReq.defaults.headers.common["Authorization"];
   delete axiosRes.defaults.headers.common["Authorization"];
+  // Ensure axios instance is updated
+  axios.defaults.headers.common["Authorization"] = "";
 };

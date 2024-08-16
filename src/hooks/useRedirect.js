@@ -22,16 +22,16 @@ export const useRedirect = (userAuthStatus) => {
           }
         } else if (userAuthStatus === "loggedOut") {
           if (currentUser) {
-            console.log("Redirecting to home: User is logged in");
-            navigate("/");
+            console.log("User is logged in, but on a loggedOut page");
+            // Instead of redirecting, we'll just log this
           } else if (localStorage.getItem('access_token')) {
             try {
               console.log("Verifying token");
               await axios.post("/dj-rest-auth/token/verify/", {
                 token: localStorage.getItem('access_token'),
               });
-              console.log("Token valid, redirecting to home");
-              navigate("/");
+              console.log("Token valid, but on a loggedOut page");
+              // Instead of redirecting, we'll just log this
             } catch (err) {
               console.log("Token invalid, removing from storage");
               localStorage.removeItem('access_token');
@@ -47,11 +47,7 @@ export const useRedirect = (userAuthStatus) => {
       }
     };
 
-    const timer = setTimeout(() => {
-      handleMount();
-    }, 500);  // Increased delay to 500ms
-
-    return () => clearTimeout(timer);
+    handleMount();
   }, [navigate, userAuthStatus, currentUser]);
 
   return isLoading;

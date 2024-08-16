@@ -18,7 +18,8 @@ import {
 } from "react-bootstrap";
 
 const SignUpForm = () => {
-  useRedirect("loggedIn");
+  const isLoading = useRedirect("loggedOut");
+
   const setCurrentUser = useSetCurrentUser();
     const [signUpData, setSignUpData] = useState({
       username: "",
@@ -97,6 +98,10 @@ const SignUpForm = () => {
     }
   };
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  
   return (
     <Row className={styles.Row}>
       <Col className="my-auto py-2 p-md-2">

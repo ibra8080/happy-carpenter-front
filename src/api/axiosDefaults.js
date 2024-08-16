@@ -3,6 +3,8 @@ import axios from 'axios';
 axios.defaults.baseURL = 'https://happy-carpenter-ebf6de9467cb.herokuapp.com/';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.defaults.withCredentials = true;
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
 export const axiosReq = axios.create();
 export const axiosRes = axios.create();
@@ -20,21 +22,24 @@ axiosReq.interceptors.request.use(
   }
 );
 
-axiosReq.interceptors.response.use(
+axiosRes.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    if (error.response.status === 401 && !originalRequest._retry) {
+    if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       const refreshToken = localStorage.getItem('refresh_token');
       try {
         const { data } = await axios.post('/dj-rest-auth/token/refresh/', { refresh: refreshToken });
         localStorage.setItem('access_token', data.access);
         axios.defaults.headers.common['Authorization'] = `Bearer ${data.access}`;
-        return axiosReq(originalRequest);
+        axiosReq.defaults.headers.common['Authorization'] = `Bearer ${data.access}`;
+        axiosRes.defaults.headers.common['Authorization'] = `Bearer ${data.access}`;
+        return axios(originalRequest);
       } catch (refreshError) {
         console.log('Refresh token error', refreshError);
         // Handle refresh token error (e.g., logout user, redirect to login)
+        return Promise.reject(refreshError);
       }
     }
     return Promise.reject(error);
