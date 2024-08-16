@@ -4,6 +4,17 @@
     min-height: 100vh;
 }
 
+.Input {
+  background: #ffffff;
+  border: 1px solid #D69723;
+  box-sizing: border-box;
+  border-radius: 4px;
+  color: #3f3f3f;
+  text-align: left;
+  padding: 10px;
+  margin-bottom: 15px;
+}
+
   * {
     box-sizing: border-box;
   }
@@ -35,3 +46,5 @@
     transition: color ease-in-out 0.3s;
     color: #a60d0d;
   }
+
+  

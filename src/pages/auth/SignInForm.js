@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { axiosReq, setAuthorizationHeader } from "../../api/axiosDefaults";
-import { useSetCurrentUser, useCurrentUser } from "../../contexts/CurrentUserContext";
+import { useSetCurrentUser } from "../../contexts/CurrentUserContext";
+import { useRedirect } from "../../hooks/useRedirect";
 import Form from "react-bootstrap/Form";
 import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
@@ -15,7 +16,6 @@ import appStyles from "../../App.module.css";
 
 function SignInForm() {
   const setCurrentUser = useSetCurrentUser();
-  const currentUser = useCurrentUser();
   const [signInData, setSignInData] = useState({
     username: "",
     password: "",
@@ -23,12 +23,7 @@ function SignInForm() {
   const { username, password } = signInData;
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (currentUser) {
-      navigate("/");
-    }
-  }, [currentUser, navigate]);
+  const isLoading = useRedirect("loggedOut");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -48,6 +43,10 @@ function SignInForm() {
       [event.target.name]: event.target.value,
     });
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Row className={styles.Row}>

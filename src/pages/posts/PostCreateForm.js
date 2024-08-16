@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { Form, Button, Row, Col, Container, Alert, Image } from "react-bootstrap";
 import styles from "../../styles/PostCreateEditForm.module.css";
 import appStyles from "../../App.module.css";
@@ -7,12 +7,9 @@ import { useNavigate } from "react-router-dom";
 import { axiosReq } from "../../api/axiosDefaults";
 import Asset from "../../components/Asset";
 import { useRedirect } from "../../hooks/useRedirect";
-import { useCurrentUser } from "../../contexts/CurrentUserContext";
 import Upload from "../../assets/upload.png";
 
 function PostCreateForm() {
-  useRedirect("loggedIn");
-  const currentUser = useCurrentUser();
   const [errors, setErrors] = useState({});
   const [postData, setPostData] = useState({
     title: "",
@@ -21,16 +18,8 @@ function PostCreateForm() {
   });
   const { title, content, image } = postData;
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true);
   const imageInput = useRef(null);
-
-  useEffect(() => {
-    if (currentUser === null) {
-      navigate('/signin');
-    } else {
-      setIsLoading(false);
-    }
-  }, [currentUser, navigate]);
+  const isLoading = useRedirect("loggedOut");
 
   const handleChange = (event) => {
     setPostData({
@@ -79,6 +68,7 @@ function PostCreateForm() {
           name="title"
           value={title}
           onChange={handleChange}
+          className={appStyles.Input}
         />
       </Form.Group>
       {errors?.title?.map((message, idx) => (
@@ -95,6 +85,7 @@ function PostCreateForm() {
           name="content"
           value={content}
           onChange={handleChange}
+          className={appStyles.Input}
         />
       </Form.Group>
       {errors?.content?.map((message, idx) => (
@@ -127,31 +118,18 @@ function PostCreateForm() {
           <Container className={`${appStyles.Content} ${styles.Container}`}>
             <Form.Group className="text-center">
               {image ? (
-                <>
-                  <figure>
-                    <Image className={appStyles.Image} src={image} rounded />
-                  </figure>
-                  <div>
-                    <Form.Label
-                      className={`${btnStyles.Button} ${btnStyles.Blue} btn`}
-                      htmlFor="image-upload"
-                    >
-                      Change the image
-                    </Form.Label>
-                  </div>
-                </>
+                <div className={styles.ImageContainer}>
+                  <Image className={styles.Image} src={image} alt="Post image" />
+                </div>
               ) : (
-                <div className={styles.UploadContainer}>
-                  <Asset src={Upload} message="Click or tap to upload an image" />
-                  <div className={styles.FileInputContainer}>
-                    <Form.Label
-                      className={`${btnStyles.Button} ${btnStyles.Blue} btn`}
-                      htmlFor="image-upload"
-                    >
-                      Choose file
-                    </Form.Label>
-                    <span>{image ? image.name : "No file chosen"}</span>
-                  </div>
+                <div 
+                  className={styles.UploadContainer}
+                  onClick={() => imageInput.current.click()}
+                >
+                  <Asset 
+                    src={Upload} 
+                    message="Click or tap to upload an image" 
+                  />
                 </div>
               )}
 
@@ -162,6 +140,17 @@ function PostCreateForm() {
                 ref={imageInput}
                 style={{ display: 'none' }}
               />
+              
+              {image && (
+                <div className={styles.FileInputContainer}>
+                  <Form.Label
+                    className={`${btnStyles.Button} ${btnStyles.Blue} btn`}
+                    htmlFor="image-upload"
+                  >
+                    Change the image
+                  </Form.Label>
+                </div>
+              )}
             </Form.Group>
             {errors?.image?.map((message, idx) => (
               <Alert variant="warning" key={idx}>
