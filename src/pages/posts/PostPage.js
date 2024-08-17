@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Row, Col, Container } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { axiosReq } from "../../api/axiosDefaults";
 import Post from "../../components/Post";
 
 function PostPage() {
   const { id } = useParams();
   const [post, setPost] = useState({ results: [] });
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleMount = async () => {
@@ -23,10 +24,14 @@ function PostPage() {
     handleMount();
   }, [id]);
 
+  const handlePostDelete = () => {
+    navigate('/');
+  };
+
   return (
     <Row className="h-100">
       <Col className="py-2 p-0 p-lg-2" lg={8}>
-        <Post {...post.results[0]} setPosts={setPost} postPage />
+        <Post {...post.results[0]} setPosts={setPost} postPage onDelete={handlePostDelete} />
         <Container className="mt-3">
           {/* Comments will go here */}
         </Container>

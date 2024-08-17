@@ -2,8 +2,9 @@ import React from 'react';
 import styles from '../styles/Post.module.css';
 import { useCurrentUser } from '../contexts/CurrentUserContext';
 import { Card, Media, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Avatar from './Avatar';
+import { axiosRes } from '../api/axiosDefaults';
 
 const Post = (props) => {
   const {
@@ -12,17 +13,38 @@ const Post = (props) => {
     profile_id,
     profile_image,
     comments_count,
-    // likes_count,  // Commented out for now
-    // like_id,      // Commented out for now
     title,
     content,
     image,
     updated_at,
     postPage,
+    setPosts,
   } = props;
 
   const currentUser = useCurrentUser();
   const is_owner = currentUser?.username === owner;
+  const navigate = useNavigate();
+
+  const handleEdit = () => {
+    navigate(`/posts/${id}/edit`);
+  };
+
+  const handleDelete = async () => {
+    try {
+      await axiosRes.delete(`/posts/${id}/`);
+      if (setPosts) {
+        setPosts((prevPosts) => ({
+          ...prevPosts,
+          results: prevPosts.results.filter((post) => post.id !== id),
+        }));
+      }
+      if (postPage) {
+        navigate('/');
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <Card className={styles.Post}>
@@ -34,15 +56,21 @@ const Post = (props) => {
           </Link>
           <div className="d-flex align-items-center">
             <span className={styles.Date}>{updated_at}</span>
-            {is_owner && postPage && (
-              <OverlayTrigger
-                placement="top"
-                overlay={<Tooltip>Edit post</Tooltip>}
-              >
-                <Link to={`/posts/${id}/edit`}>
-                  <i className="fas fa-edit" />
-                </Link>
-              </OverlayTrigger>
+            {is_owner && (
+              <>
+                <OverlayTrigger
+                  placement="top"
+                  overlay={<Tooltip>Edit post</Tooltip>}
+                >
+                  <i className={`fas fa-edit ${styles.Icon}`} onClick={handleEdit} />
+                </OverlayTrigger>
+                <OverlayTrigger
+                  placement="top"
+                  overlay={<Tooltip>Delete post</Tooltip>}
+                >
+                  <i className={`fas fa-trash-alt ${styles.Icon}`} onClick={handleDelete} />
+                </OverlayTrigger>
+              </>
             )}
           </div>
         </Media>
@@ -54,7 +82,6 @@ const Post = (props) => {
         {title && <Card.Title className="text-center">{title}</Card.Title>}
         {content && <Card.Text>{content}</Card.Text>}
         <div className={styles.PostBar}>
-          {/* Like functionality will go here */}
           <Link to={`/posts/${id}`}>
             <i className="far fa-comments" />
           </Link>
