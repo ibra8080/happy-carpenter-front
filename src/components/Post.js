@@ -30,10 +30,10 @@ const Post = (props) => {
         <Media className="align-items-center justify-content-between">
           <Link to={`/profiles/${profile_id}`}>
             <Avatar src={profile_image} height={55} />
-            {owner}
+            <span className={styles.Owner}>{owner}</span>
           </Link>
           <div className="d-flex align-items-center">
-            <span>{updated_at}</span>
+            <span className={styles.Date}>{updated_at}</span>
             {is_owner && postPage && (
               <OverlayTrigger
                 placement="top"
@@ -48,7 +48,7 @@ const Post = (props) => {
         </Media>
       </Card.Body>
       <Link to={`/posts/${id}`}>
-        <Card.Img src={image} alt={title} />
+        <Card.Img src={image} alt={title} className={styles.PostImage} />
       </Link>
       <Card.Body>
         {title && <Card.Title className="text-center">{title}</Card.Title>}
@@ -78,7 +78,7 @@ const Post = (props) => {
             </OverlayTrigger>
           )}
           {likes_count}
-          <Link to={`/posts/${id}`}>
+          <Link to={`/posts/${id}`} className={styles.PostLink}>
             <i className="far fa-comments" />
           </Link>
           {comments_count}
@@ -87,3 +87,5 @@ const Post = (props) => {
     </Card>
   );
 };
+
+export default Post;

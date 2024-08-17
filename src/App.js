@@ -9,6 +9,7 @@ import { axiosReq, axiosRes } from "./api/axiosDefaults";
 import SignUpForm from "./pages/auth/SignUpForm";
 import SignInForm from "./pages/auth/SignInForm";
 import PostCreateForm from "./pages/posts/PostCreateForm";
+import PostList from "./pages/posts/PostList";  // Import the new PostList component
 
 function App() {
   useEffect(() => {
@@ -30,7 +31,7 @@ function App() {
           <NavBar />
           <Container className={styles.Main}>
             <Routes>
-              <Route path="/" element={<h1>Home page</h1>} />
+              <Route path="/" element={<PostList message="No results found. Adjust the search keyword." />} />
               <Route path="/signin" element={<SignInForm />} />
               <Route path="/signup" element={<SignUpForm />} />
               <Route path="/posts/create" element={<PostCreateForm />} />

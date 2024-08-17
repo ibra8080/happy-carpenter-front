@@ -1,0 +1,46 @@
+.SearchBar input {
+    background: #ffffff;
+    border: 1px solid #D69723;
+    box-sizing: border-box;
+    border-radius: 4px;
+    color: #3f3f3f;
+    padding-left: 40px;
+    margin-bottom: 16px;
+    font-family: "Poppins", sans-serif;
+  }
+  
+  .SearchBar input:focus {
+    outline: none;
+    border-color: #a60d0d;
+    box-shadow: 0 0 0 0.2rem rgba(166, 13, 13, 0.25);
+  }
+  
+  .SearchIcon {
+    position: absolute;
+    font-size: 1.2rem;
+    padding: 9px;
+    padding-left: 15px;
+    color: #cfced3;
+  }
+  
+  .SearchIcon:hover {
+    cursor: default;
+    color: #a60d0d;
+    transition: color ease-in-out 0.3s;
+  }
+  
+  .SearchBar {
+    margin-bottom: 20px;
+  }
+  
+  .PostsContainer {
+    background-color: #fffcec;
+    border-radius: 4px;
+    padding: 20px;
+  }
+  
+  @media screen and (max-width: 991px) {
+    .PostsContainer {
+      padding: 10px;
+    }
+  }

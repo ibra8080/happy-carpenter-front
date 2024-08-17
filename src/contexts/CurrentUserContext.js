@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useCallback, useRef } from "react";
 import axios from "axios";
 import { axiosReq, axiosRes, setAuthorizationHeader } from "../api/axiosDefaults";
 import { useNavigate } from "react-router-dom";
@@ -13,29 +13,9 @@ export const CurrentUserProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
 
-  const handleMount = async () => {
-    try {
-      const accessToken = localStorage.getItem('access_token');
-      console.log('Access token:', accessToken ? 'exists' : 'does not exist');
-      
-      if (!accessToken) {
-        console.log('No access token found, attempting to refresh...');
-        await refreshToken();
-      }
-      
-      console.log('Attempting to fetch user data...');
-      const { data } = await axiosRes.get("dj-rest-auth/user/");
-      console.log('User data fetched successfully:', data);
-      setCurrentUser(data);
-    } catch (err) {
-      console.error("Error fetching current user:", err.response ? err.response.data : err.message);
-      console.error("Error status:", err.response ? err.response.status : 'No response');
-      console.error("Error headers:", err.response ? err.response.headers : 'No headers');
-      setCurrentUser(null);
-    }
-  };
+  const refreshTokenRef = useRef(null);
 
-  const refreshToken = async () => {
+  refreshTokenRef.current = useCallback(async () => {
     try {
       const refreshToken = localStorage.getItem('refresh_token');
       if (!refreshToken) {
@@ -53,11 +33,33 @@ export const CurrentUserProvider = ({ children }) => {
       navigate("/signin");
       throw error; // Re-throw to be caught by the caller
     }
-  };
+  }, [navigate]);
+
+  const handleMount = useCallback(async () => {
+    try {
+      const accessToken = localStorage.getItem('access_token');
+      console.log('Access token:', accessToken ? 'exists' : 'does not exist');
+      
+      if (!accessToken) {
+        console.log('No access token found, attempting to refresh...');
+        await refreshTokenRef.current();
+      }
+      
+      console.log('Attempting to fetch user data...');
+      const { data } = await axiosRes.get("dj-rest-auth/user/");
+      console.log('User data fetched successfully:', data);
+      setCurrentUser(data);
+    } catch (err) {
+      console.error("Error fetching current user:", err.response ? err.response.data : err.message);
+      console.error("Error status:", err.response ? err.response.status : 'No response');
+      console.error("Error headers:", err.response ? err.response.headers : 'No headers');
+      setCurrentUser(null);
+    }
+  }, []);
 
   useEffect(() => {
     handleMount();
-  }, []);
+  }, [handleMount]);
 
   useEffect(() => {
     const refreshTokenInterceptor = axiosReq.interceptors.response.use(
@@ -66,7 +68,7 @@ export const CurrentUserProvider = ({ children }) => {
         if (error.response?.status === 401) {
           try {
             console.log('401 error detected, attempting to refresh token...');
-            await refreshToken();
+            await refreshTokenRef.current();
             return axiosReq(error.config);
           } catch (refreshError) {
             console.error('Token refresh failed in interceptor:', refreshError);
