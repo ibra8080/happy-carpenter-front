@@ -9,7 +9,8 @@ import SignUpForm from "./pages/auth/SignUpForm";
 import SignInForm from "./pages/auth/SignInForm";
 import PostCreateForm from "./pages/posts/PostCreateForm";
 import PostsPage from "./pages/posts/PostsPage";
-import PostPage from "./pages/posts/PostPage";  // Import the new PostPage component
+import PostPage from "./pages/posts/PostPage";
+import PostEditForm from "./pages/posts/PostEditForm";
 
 function App() {
   useEffect(() => {
@@ -35,7 +36,8 @@ function App() {
               <Route path="/signin" element={<SignInForm />} />
               <Route path="/signup" element={<SignUpForm />} />
               <Route path="/posts/create" element={<PostCreateForm />} />
-              <Route path="/posts/:id" element={<PostPage />} />  {/* New route for individual post view */}
+              <Route path="/posts/:id" element={<PostPage />} />
+              <Route path="/posts/:id/edit" element={<PostEditForm />} />
               <Route path="*" element={<p>Page not found!</p>} />
             </Routes>
           </Container>
@@ -45,4 +47,4 @@ function App() {
   );
 }
 
-export default App;
+export default App; 
