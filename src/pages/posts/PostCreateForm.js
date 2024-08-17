@@ -9,6 +9,7 @@ import Asset from "../../components/Asset";
 import { useRedirect } from "../../hooks/useRedirect";
 import Upload from "../../assets/upload.png";
 
+
 function PostCreateForm() {
   const [errors, setErrors] = useState({});
   const [postData, setPostData] = useState({
@@ -49,8 +50,8 @@ function PostCreateForm() {
     }
 
     try {
-      const { data } = await axiosReq.post("/posts/", formData);
-      navigate(`/posts/${data.id}`);
+      await axiosReq.post("/posts/", formData);
+      navigate("/");  // Navigate back to the home page after successful post creation
     } catch (err) {
       console.log(err);
       if (err.response?.status !== 401) {
@@ -58,6 +59,7 @@ function PostCreateForm() {
       }
     }
   };
+
 
   const textFields = (
     <div className="text-center">
@@ -98,13 +100,13 @@ function PostCreateForm() {
         className={`${btnStyles.Button} ${btnStyles.Blue}`}
         onClick={() => navigate(-1)}
       >
-        cancel
+        Cancel
       </Button>
       <Button 
         className={`${btnStyles.Button} ${btnStyles.Blue}`} 
         type="submit"
       >
-        create
+        Create
       </Button>
     </div>
   );
@@ -133,7 +135,8 @@ function PostCreateForm() {
                 </div>
               )}
 
-              <Form.File
+              <Form.Control
+                type="file"
                 id="image-upload"
                 accept="image/*"
                 onChange={handleChangeImage}
@@ -143,12 +146,12 @@ function PostCreateForm() {
               
               {image && (
                 <div className={styles.FileInputContainer}>
-                  <Form.Label
-                    className={`${btnStyles.Button} ${btnStyles.Blue} btn`}
-                    htmlFor="image-upload"
+                  <Button
+                    className={`${btnStyles.Button} ${btnStyles.Blue}`}
+                    onClick={() => imageInput.current.click()}
                   >
                     Change the image
-                  </Form.Label>
+                  </Button>
                 </div>
               )}
             </Form.Group>

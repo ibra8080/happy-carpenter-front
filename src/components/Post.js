@@ -78,7 +78,7 @@ const Post = (props) => {
             </OverlayTrigger>
           )}
           {likes_count}
-          <Link to={`/posts/${id}`} className={styles.PostLink}>
+          <Link to={`/posts/${id}`}>
             <i className="far fa-comments" />
           </Link>
           {comments_count}
