@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { axiosReq, setAuthorizationHeader } from "../../api/axiosDefaults";
+import { axiosReq } from "../../api/axiosDefaults";
 import { useSetCurrentUser } from "../../contexts/CurrentUserContext";
 import { useRedirect } from "../../hooks/useRedirect";
 import Form from "react-bootstrap/Form";
@@ -22,20 +22,9 @@ function SignInForm() {
   });
   const { username, password } = signInData;
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
-  const isLoading = useRedirect("loggedOut");
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      const { data } = await axiosReq.post("/dj-rest-auth/login/", signInData);
-      setCurrentUser(data.user);
-      setAuthorizationHeader(data);
-      navigate("/");
-    } catch (err) {
-      setErrors(err.response?.data);
-    }
-  };
+  useRedirect("loggedIn");
 
   const handleChange = (event) => {
     setSignInData({
@@ -44,9 +33,28 @@ function SignInForm() {
     });
   };
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setIsSubmitting(true);
+    try {
+      const { data } = await axiosReq.post("/dj-rest-auth/login/", signInData);
+      console.log("Login response data:", data);
+      setCurrentUser(data.user);
+      // Store tokens in localStorage
+      localStorage.setItem('access_token', data.access_token);
+      localStorage.setItem('refresh_token', data.refresh_token);
+      navigate("/");
+    } catch (err) {
+      console.error("Login error:", err);
+      if (err.response) {
+        setErrors(err.response.data);
+      } else {
+        setErrors({ non_field_errors: ["An error occurred. Please try again."] });
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <Row className={styles.Row}>
@@ -91,8 +99,9 @@ function SignInForm() {
             <Button
               className={`${btnStyles.Button} ${btnStyles.Wide} ${btnStyles.Bright}`}
               type="submit"
+              disabled={isSubmitting}
             >
-              Sign In
+              {isSubmitting ? "Signing In..." : "Sign In"}
             </Button>
             {errors.non_field_errors?.map((message, idx) => (
               <Alert key={idx} variant="warning" className="mt-3">

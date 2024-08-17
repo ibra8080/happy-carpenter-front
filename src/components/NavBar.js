@@ -7,7 +7,6 @@ import Avatar from "./Avatar";
 import logo from "../assets/logo.png";
 import styles from "../styles/NavBar.module.css";
 import useClickOutsideToggle from "../hooks/useClickOutsideToggle";
-import { removeTokens } from "../contexts/CurrentUserContext";
 
 const NavBar = () => {
   const currentUser = useCurrentUser();
@@ -21,7 +20,9 @@ const NavBar = () => {
     try {
       await axios.post("dj-rest-auth/logout/");
       setCurrentUser(null);
-      removeTokens();
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+      delete axios.defaults.headers.common['Authorization'];
       navigate("/signin");
     } catch (err) {
       console.log(err);
