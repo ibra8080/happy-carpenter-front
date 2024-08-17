@@ -2,9 +2,6 @@ import axios from 'axios';
 
 axios.defaults.baseURL = 'https://happy-carpenter-ebf6de9467cb.herokuapp.com/';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
-axios.defaults.withCredentials = true;
-axios.defaults.xsrfCookieName = 'csrftoken';
-axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
 export const axiosReq = axios.create();
 export const axiosRes = axios.create();

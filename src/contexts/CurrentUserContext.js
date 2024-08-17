@@ -18,13 +18,9 @@ export const CurrentUserProvider = ({ children }) => {
       const { data } = await axiosRes.get("dj-rest-auth/user/");
       setCurrentUser(data);
     } catch (err) {
-      console.log(err);
+      console.error("Error fetching current user:", err);
     }
   };
-
-  useEffect(() => {
-    handleMount();
-  }, []);
 
   useEffect(() => {
     const refreshTokenInterceptor = axiosReq.interceptors.response.use(
@@ -32,7 +28,12 @@ export const CurrentUserProvider = ({ children }) => {
       async (error) => {
         if (error.response?.status === 401) {
           try {
-            await axios.post("/dj-rest-auth/token/refresh/");
+            const refreshToken = localStorage.getItem('refresh_token');
+            const { data } = await axios.post('/dj-rest-auth/token/refresh/', { refresh: refreshToken });
+            localStorage.setItem('access_token', data.access);
+            axios.defaults.headers.common['Authorization'] = `Bearer ${data.access}`;
+            axiosReq.defaults.headers.common['Authorization'] = `Bearer ${data.access}`;
+            axiosRes.defaults.headers.common['Authorization'] = `Bearer ${data.access}`;
             return axiosReq(error.config);
           } catch (refreshError) {
             setCurrentUser(null);
@@ -43,7 +44,7 @@ export const CurrentUserProvider = ({ children }) => {
         return Promise.reject(error);
       }
     );
-
+  
     return () => {
       axiosReq.interceptors.response.eject(refreshTokenInterceptor);
     };
