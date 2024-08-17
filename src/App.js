@@ -11,6 +11,7 @@ import PostCreateForm from "./pages/posts/PostCreateForm";
 import PostsPage from "./pages/posts/PostsPage";
 import PostPage from "./pages/posts/PostPage";
 import PostEditForm from "./pages/posts/PostEditForm";
+import "./api/axiosInterceptor";
 
 function App() {
   useEffect(() => {
@@ -47,4 +48,4 @@ function App() {
   );
 }
 
-export default App; 
+export default App;

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-axios.defaults.baseURL = "https://happy-carpenter-ebf6de9467cb.herokuapp.com/";  // Replace with your actual API URL
+axios.defaults.baseURL = "https://happy-carpenter-ebf6de9467cb.herokuapp.com/";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 axios.defaults.withCredentials = true;
 
@@ -14,6 +14,8 @@ export const setAuthorizationHeader = (data) => {
     axiosReq.defaults.headers.common["Authorization"] = `Bearer ${data.access}`;
     axiosRes.defaults.headers.common["Authorization"] = `Bearer ${data.access}`;
   } else {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
     delete axiosReq.defaults.headers.common["Authorization"];
     delete axiosRes.defaults.headers.common["Authorization"];
   }
