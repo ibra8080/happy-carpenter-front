@@ -1,59 +1,88 @@
 .Post {
+    font-family: "Poppins", sans-serif;
     background-color: #ffffff;
     border: 1px solid #D69723;
     border-radius: 4px;
     margin-bottom: 16px;
     text-align: center;
-}
-
-.Post figure,
-h5 {
+    color: #3f3f3f;
+  }
+  
+  .Post figure,
+  h5 {
     margin: 0 0;
-}
-
-.Heart {
+  }
+  
+  .Heart {
     color: #a60d0d;
-}
-
-.Heart:hover {
-    color: #8a0a0a;
-}
-
-.HeartOutline:hover {
+  }
+  
+  .Heart:hover {
+    color: #D69723;
+  }
+  
+  .HeartOutline:hover {
     color: #a60d0d;
-}
-
-.PostBar {
-    margin-top: 15px;
-}
-
-.PostBar i {
-    margin-right: 5px;
-}
-
-.PostLink {
-    text-decoration: none;
-    color: #555555;
-}
-
-.PostLink:hover {
-    text-decoration: none;
+  }
+  
+  .Icon {
+    color: #cfced3;
+    font-size: 1.6rem;
+    padding: 7px;
+    vertical-align: middle;
+  }
+  
+  .Icon:hover {
+    cursor: pointer;
     color: #a60d0d;
-}
-
-.PostImage {
-    max-height: 350px;
-    object-fit: cover;
-    width: 100%;
-}
-
-.Owner {
+    transition: color ease-in-out 0.3s;
+  }
+  
+  .Owner {
     font-weight: bold;
     color: #555555;
     margin-right: 8px;
-}
-
-.Date {
+  }
+  
+  .Owner:hover {
+    color: #a60d0d;
+  }
+  
+  .Date {
     font-weight: lighter;
-    color: #c1c1c5;
-}
+    color: #3f3f3f;
+  }
+  
+  .PostBar {
+    margin-top: 15px;
+  }
+  
+  .PostBar i {
+    color: #cfced3;
+    font-size: 1.6rem;
+    padding: 7px;
+    vertical-align: middle;
+  }
+  
+  .PostBar i:hover {
+    cursor: pointer;
+    transition: color ease-in-out 0.3s;
+    color: #a60d0d;
+  }
+  
+  .PostImage {
+    max-height: 350px;
+    object-fit: cover;
+    width: 100%;
+    border-radius: 4px;
+  }
+  
+  .Post a {
+    color: #555555;
+    transition: color ease-in-out 0.3s;
+  }
+  
+  .Post a:hover {
+    text-decoration: none;
+    color: #a60d0d;
+  }
