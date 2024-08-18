@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Row, Col, Container } from "react-bootstrap";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { axiosReq } from "../../api/axiosDefaults";
 import Post from "../../components/Post";
+import Comment from "../comments/Comment";
+import CommentCreateForm from "../comments/CommentCreateForm";
+import { useCurrentUser } from "../../contexts/CurrentUserContext";
 
 function PostPage() {
   const { id } = useParams();
