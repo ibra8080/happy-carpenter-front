@@ -42,18 +42,41 @@ function PostCreateForm() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData();
-
+  
     formData.append("title", title);
     formData.append("content", content);
     if (imageInput?.current?.files[0]) {
       formData.append("image", imageInput.current.files[0]);
+      console.log("Image file appended:", imageInput.current.files[0]);
+    } else {
+      console.log("No image file selected");
     }
-
+  
+    // Log formData
+    for (var pair of formData.entries()) {
+      console.log(pair[0] + ', ' + (pair[0] === 'image' ? 'File object' : pair[1]));
+    }
+  
     try {
-      await axiosReq.post("/posts/", formData);
-      navigate("/");  // Navigate back to the home page after successful post creation
+      console.log("Sending POST request to /posts/");
+      const { data } = await axiosReq.post("/posts/", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.log("Response data:", data);
+      navigate("/");
     } catch (err) {
-      console.log(err);
+      console.log("Error:", err);
+      if (err.response) {
+        console.log("Error response:", err.response.data);
+        console.log("Error status:", err.response.status);
+        console.log("Error headers:", err.response.headers);
+      } else if (err.request) {
+        console.log("Error request:", err.request);
+      } else {
+        console.log('Error message:', err.message);
+      }
       if (err.response?.status !== 401) {
         setErrors(err.response?.data);
       }
