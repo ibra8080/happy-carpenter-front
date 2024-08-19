@@ -13,11 +13,13 @@ function PostList({ message, filter = "" }) {
   const { pathname } = useLocation();
 
   const [query, setQuery] = useState("");
+  const [imageFilter, setImageFilter] = useState("");
+  const [category, setCategory] = useState("");
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const { data } = await axiosReq.get(`/posts/?${filter}search=${query}`);
+        const { data } = await axiosReq.get(`/posts/?${filter}search=${query}&image_filter=${imageFilter}&categories=${category}`);
         setPosts(data);
         setHasLoaded(true);
       } catch (err) {
@@ -33,7 +35,7 @@ function PostList({ message, filter = "" }) {
     return () => {
       clearTimeout(timer);
     };
-  }, [filter, query, pathname]);
+  }, [filter, query, imageFilter, category, pathname]);
 
   return (
     <Row className="h-100">
@@ -49,6 +51,29 @@ function PostList({ message, filter = "" }) {
             type="text"
             className="mr-sm-2"
             placeholder="Search posts"
+          />
+          <Form.Control
+            as="select"
+            value={imageFilter}
+            onChange={(event) => setImageFilter(event.target.value)}
+            className="mr-sm-2"
+          >
+            <option value="">All Image Filters</option>
+            <option value="normal">Normal</option>
+            <option value="furniture">Furniture</option>
+            <option value="antiques">Antiques</option>
+            <option value="renovation&repair">Renovation & Repair</option>
+            <option value="artworks">Artworks</option>
+            <option value="tools">Tools</option>
+            <option value="construction">Construction</option>
+            <option value="other">Other</option>
+          </Form.Control>
+          <Form.Control
+            type="text"
+            value={category}
+            onChange={(event) => setCategory(event.target.value)}
+            className="mr-sm-2"
+            placeholder="Filter by category"
           />
         </Form>
 
