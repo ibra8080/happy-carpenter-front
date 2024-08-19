@@ -1,68 +1,67 @@
 .Button {
-    font-size: 0.8rem;
-    align-self: center;
-    border-radius: 100px;
-    border-color: transparent;
-    padding: 4px 10px;
-    margin-left: 2px;
-    margin-right: 2px;
-    min-width: 75px;
-  }
-  
-  .Button:hover {
-    opacity: 0.8;
-    border-color: transparent;
-    cursor: pointer;
-  }
-  
-  .Button:hover:active {
-    background-color: #D69723 !important;
-    color: #fffcec;
-  }
-  
-  .Button:active {
-    background-color: #D69723 !important;
-  }
-  
-  .Button:focus {
-    background-color: #D69723;
-  }
-  
-  .Wide {
-    padding: 10px 50px;
-    width: 100%;
-  }
-  
-  .Blue,
-  .BlueOutline:hover,
-  .Bright:hover {
-    background-color: #a60d0d;
-    color: #fffcec;
-  }
-  
-  .BlueOutline,
-  .Blue:hover {
-    /* border: 1px solid #2142b2; */
-    background-color: #fffcec;
-    color: #a60d0d;
-  }
-  
-  .Black,
-  .BlackOutline:hover {
-    /* background-color: #242a3d;
-    color: white; */
-    background-color: #a60d0d;
-    color: #fffcec;
-  }
-  
-  .Black:hover,
-  .BlackOutline {
-    
-    background-color: #fffcec;
-    color: #a60d0d;
-  }
-  
-  .Bright {
-    background-color: #D69723;
-    color: #fffcec;
-  }
+  font-size: 0.8rem;
+  align-self: center;
+  border-radius: 100px;
+  border-color: transparent;
+  padding: 4px 10px;
+  margin-left: 2px;
+  margin-right: 2px;
+  min-width: 75px;
+  transition: all 0.2s ease-in-out;
+}
+
+.Button:hover {
+  opacity: 0.8;
+  border-color: transparent;
+  cursor: pointer;
+}
+
+.Button:hover:active {
+  background-color: var(--secondary-color) !important;
+  color: var(--background-color);
+}
+
+.Button:active {
+  background-color: var(--secondary-color) !important;
+}
+
+.Button:focus {
+  background-color: var(--secondary-color);
+}
+
+.Wide {
+  padding: 10px 50px;
+  width: 100%;
+}
+
+.Blue,
+.BlueOutline:hover,
+.Bright:hover {
+  background-color: var(--primary-color);
+  color: var(--background-color);
+}
+
+.BlueOutline,
+.Blue:hover {
+  background-color: var(--background-color);
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+}
+
+.Black,
+.BlackOutline:hover {
+  background-color: var(--primary-color);
+  color: var(--background-color);
+}
+
+.Black:hover,
+.BlackOutline {
+  background-color: var(--background-color);
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+}
+
+.Bright {
+  background-color: var(--secondary-color);
+  color: var(--background-color);
+}

@@ -1,88 +1,75 @@
 .Post {
-    font-family: "Poppins", sans-serif;
-    background-color: #ffffff;
-    border: 1px solid #D69723;
-    border-radius: 4px;
-    margin-bottom: 16px;
-    text-align: center;
-    color: #3f3f3f;
-  }
-  
-  .Post figure,
-  h5 {
-    margin: 0 0;
-  }
-  
-  .Heart {
-    color: #a60d0d;
-  }
-  
-  .Heart:hover {
-    color: #D69723;
-  }
-  
-  .HeartOutline:hover {
-    color: #a60d0d;
-  }
-  
-  .Icon {
-    color: #cfced3;
-    font-size: 1.6rem;
-    padding: 7px;
-    vertical-align: middle;
-  }
-  
-  .Icon:hover {
-    cursor: pointer;
-    color: #a60d0d;
-    transition: color ease-in-out 0.3s;
-  }
-  
-  .Owner {
-    font-weight: bold;
-    color: #555555;
-    margin-right: 8px;
-  }
-  
-  .Owner:hover {
-    color: #a60d0d;
-  }
-  
-  .Date {
-    font-weight: lighter;
-    color: #3f3f3f;
-  }
-  
-  .PostBar {
-    margin-top: 15px;
-  }
-  
-  .PostBar i {
-    color: #cfced3;
-    font-size: 1.6rem;
-    padding: 7px;
-    vertical-align: middle;
-  }
-  
-  .PostBar i:hover {
-    cursor: pointer;
-    transition: color ease-in-out 0.3s;
-    color: #a60d0d;
-  }
-  
-  .PostImage {
-    max-height: 350px;
-    object-fit: cover;
-    width: 100%;
-    border-radius: 4px;
-  }
-  
-  .Post a {
-    color: #555555;
-    transition: color ease-in-out 0.3s;
-  }
-  
-  .Post a:hover {
-    text-decoration: none;
-    color: #a60d0d;
-  }
+  font-family: "Poppins", sans-serif;
+  background-color: #ffffff;
+  border: 1px solid var(--secondary-color);
+  border-radius: 4px;
+  margin-bottom: 16px;
+  text-align: center;
+  color: var(--text-color);
+}
+
+.Post figure,
+h5 {
+  margin: 0;
+}
+
+.Heart {
+  color: var(--primary-color);
+}
+
+.Heart:hover {
+  color: var(--secondary-color);
+}
+
+.HeartOutline:hover {
+  color: var(--primary-color);
+}
+
+.Icon {
+  color: var(--border-color);
+  font-size: 1.6rem;
+  padding: 7px;
+  vertical-align: middle;
+}
+
+.Icon:hover {
+  cursor: pointer;
+  color: var(--primary-color);
+  transition: color ease-in-out 0.3s;
+}
+
+.Owner {
+  font-weight: bold;
+  color: var(--light-text-color);
+  margin-right: 8px;
+}
+
+.Owner:hover {
+  color: var(--primary-color);
+}
+
+.Date {
+  font-weight: lighter;
+  color: var(--text-color);
+}
+
+.PostBar {
+  margin-top: 15px;
+}
+
+.PostImage {
+  max-height: 350px;
+  object-fit: cover;
+  width: 100%;
+  border-radius: 4px;
+}
+
+.Post a {
+  color: var(--light-text-color);
+  transition: color ease-in-out 0.3s;
+}
+
+.Post a:hover {
+  text-decoration: none;
+  color: var(--primary-color);
+}
