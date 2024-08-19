@@ -12,8 +12,10 @@ function PostEditForm() {
     title: "",
     content: "",
     image: "",
+    image_filter: "normal",
+    categories: [],
   });
-  const { title, content, image } = postData;
+  const { title, content, image, image_filter, categories } = postData;
 
   const imageInput = useRef(null);
   const navigate = useNavigate();
@@ -23,9 +25,9 @@ function PostEditForm() {
     const handleMount = async () => {
       try {
         const { data } = await axiosReq.get(`/posts/${id}/`);
-        const { title, content, image, is_owner } = data;
+        const { title, content, image, image_filter, categories, is_owner } = data;
 
-        is_owner ? setPostData({ title, content, image }) : navigate("/");
+        is_owner ? setPostData({ title, content, image, image_filter, categories }) : navigate("/");
       } catch (err) {
         console.log(err);
       }
@@ -57,6 +59,10 @@ function PostEditForm() {
 
     formData.append("title", title);
     formData.append("content", content);
+    formData.append("image_filter", image_filter);
+    categories.forEach((category, index) => {
+      formData.append(`categories[${index}]`, category);
+    });
 
     if (imageInput?.current?.files[0]) {
       formData.append("image", imageInput.current.files[0]);
@@ -101,6 +107,46 @@ function PostEditForm() {
         />
       </Form.Group>
       {errors?.content?.map((message, idx) => (
+        <Alert variant="warning" key={idx}>
+          {message}
+        </Alert>
+      ))}
+
+      <Form.Group>
+        <Form.Label>Image Filter</Form.Label>
+        <Form.Control
+          as="select"
+          name="image_filter"
+          value={image_filter}
+          onChange={handleChange}
+        >
+          <option value="normal">Normal</option>
+          <option value="furniture">Furniture</option>
+          <option value="antiques">Antiques</option>
+          <option value="renovation&repair">Renovation & Repair</option>
+          <option value="artworks">Artworks</option>
+          <option value="tools">Tools</option>
+          <option value="construction">Construction</option>
+          <option value="other">Other</option>
+        </Form.Control>
+      </Form.Group>
+      {errors?.image_filter?.map((message, idx) => (
+        <Alert variant="warning" key={idx}>
+          {message}
+        </Alert>
+      ))}
+
+      <Form.Group>
+        <Form.Label>Categories</Form.Label>
+        <Form.Control
+          type="text"
+          name="categories"
+          value={categories.join(", ")}
+          onChange={(e) => setPostData({...postData, categories: e.target.value.split(", ")})}
+          placeholder="Enter categories separated by commas"
+        />
+      </Form.Group>
+      {errors?.categories?.map((message, idx) => (
         <Alert variant="warning" key={idx}>
           {message}
         </Alert>
