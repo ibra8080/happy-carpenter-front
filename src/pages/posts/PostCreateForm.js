@@ -1,14 +1,11 @@
 import React, { useState, useRef } from "react";
-import { Form, Button, Row, Col, Container, Alert, Image } from "react-bootstrap";
+import { Form, Button, Container, Alert, Image } from "react-bootstrap";
 import styles from "../../styles/PostCreateEditForm.module.css";
 import appStyles from "../../App.module.css";
 import btnStyles from "../../styles/Button.module.css";
 import { useNavigate } from "react-router-dom";
 import { axiosReq } from "../../api/axiosDefaults";
-import Asset from "../../components/Asset";
-import { useRedirect } from "../../hooks/useRedirect";
-import Upload from "../../assets/upload.png";
-
+// import { useRedirect } from "../../hooks/useRedirect";
 
 function PostCreateForm() {
   const [errors, setErrors] = useState({});
@@ -16,76 +13,49 @@ function PostCreateForm() {
     title: "",
     content: "",
     image: "",
+    image_filter: "normal",
+    categories: [],
   });
-  const { title, content, image } = postData;
+  const { title, content, image_filter, categories } = postData;
   const navigate = useNavigate();
   const imageInput = useRef(null);
-  const isLoading = useRedirect("loggedOut");
+  // const isLoading = useRedirect("loggedOut");
 
   const handleChange = (event) => {
+    const { name, value, type, files } = event.target;
     setPostData({
       ...postData,
-      [event.target.name]: event.target.value,
+      [name]: type === "file" ? files[0] : value,
     });
-  };
-
-  const handleChangeImage = (event) => {
-    if (event.target.files.length) {
-      URL.revokeObjectURL(image);
-      setPostData({
-        ...postData,
-        image: URL.createObjectURL(event.target.files[0]),
-      });
-    }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData();
-  
+
     formData.append("title", title);
     formData.append("content", content);
+    formData.append("image_filter", image_filter);
     if (imageInput?.current?.files[0]) {
       formData.append("image", imageInput.current.files[0]);
-      console.log("Image file appended:", imageInput.current.files[0]);
-    } else {
-      console.log("No image file selected");
     }
-  
-    // Log formData
-    for (var pair of formData.entries()) {
-      console.log(pair[0] + ', ' + (pair[0] === 'image' ? 'File object' : pair[1]));
-    }
-  
+    categories.forEach((category, index) => {
+      formData.append(`categories[${index}]`, category);
+    });
+
     try {
-      console.log("Sending POST request to /posts/");
-      const { data } = await axiosReq.post("/posts/", formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      console.log("Response data:", data);
-      navigate("/");
+      const { data } = await axiosReq.post("/posts/", formData);
+      navigate(`/posts/${data.id}`);
     } catch (err) {
-      console.log("Error:", err);
-      if (err.response) {
-        console.log("Error response:", err.response.data);
-        console.log("Error status:", err.response.status);
-        console.log("Error headers:", err.response.headers);
-      } else if (err.request) {
-        console.log("Error request:", err.request);
-      } else {
-        console.log('Error message:', err.message);
-      }
+      console.log(err);
       if (err.response?.status !== 401) {
         setErrors(err.response?.data);
       }
     }
   };
 
-
   const textFields = (
-    <div className="text-center">
+    <>
       <Form.Group>
         <Form.Label>Title</Form.Label>
         <Form.Control
@@ -93,7 +63,6 @@ function PostCreateForm() {
           name="title"
           value={title}
           onChange={handleChange}
-          className={appStyles.Input}
         />
       </Form.Group>
       {errors?.title?.map((message, idx) => (
@@ -110,10 +79,69 @@ function PostCreateForm() {
           name="content"
           value={content}
           onChange={handleChange}
-          className={appStyles.Input}
         />
       </Form.Group>
       {errors?.content?.map((message, idx) => (
+        <Alert variant="warning" key={idx}>
+          {message}
+        </Alert>
+      ))}
+
+      <Form.Group>
+        <Form.Label>Image</Form.Label>
+        <Form.File
+          id="image-upload"
+          ref={imageInput}
+          accept="image/*"
+          onChange={handleChange}
+          name="image"
+        />
+      </Form.Group>
+      {errors?.image?.map((message, idx) => (
+        <Alert variant="warning" key={idx}>
+          {message}
+        </Alert>
+      ))}
+
+      {postData.image && (
+        <Image src={URL.createObjectURL(postData.image)} rounded fluid />
+      )}
+
+      <Form.Group>
+        <Form.Label>Image Filter</Form.Label>
+        <Form.Control
+          as="select"
+          name="image_filter"
+          value={image_filter}
+          onChange={handleChange}
+        >
+          <option value="normal">Normal</option>
+          <option value="furniture">Furniture</option>
+          <option value="antiques">Antiques</option>
+          <option value="renovation&repair">Renovation & Repair</option>
+          <option value="artworks">Artworks</option>
+          <option value="tools">Tools</option>
+          <option value="construction">Construction</option>
+          <option value="other">Other</option>
+        </Form.Control>
+      </Form.Group>
+      {errors?.image_filter?.map((message, idx) => (
+        <Alert variant="warning" key={idx}>
+          {message}
+        </Alert>
+      ))}
+
+      <Form.Group>
+        <Form.Label>Categories</Form.Label>
+        <Form.Control
+          type="text"
+          name="categories"
+          value={categories.join(", ")}
+          onChange={(e) => setPostData({...postData, categories: e.target.value.split(", ")})}
+          placeholder="Enter categories separated by commas"
+        />
+      </Form.Group>
+      {errors?.categories?.map((message, idx) => (
         <Alert variant="warning" key={idx}>
           {message}
         </Alert>
@@ -125,72 +153,17 @@ function PostCreateForm() {
       >
         Cancel
       </Button>
-      <Button 
-        className={`${btnStyles.Button} ${btnStyles.Blue}`} 
-        type="submit"
-      >
+      <Button className={`${btnStyles.Button} ${btnStyles.Blue}`} type="submit">
         Create
       </Button>
-    </div>
+    </>
   );
 
-  if (isLoading) return <Asset spinner />;
-
   return (
-    <Form onSubmit={handleSubmit} className={`${styles.Form} ${appStyles.App}`}>
-      <Row className={styles.Content}>
-        <Col className="py-2 p-0 p-md-2" md={7} lg={8}>
-          <Container className={`${appStyles.Content} ${styles.Container}`}>
-            <Form.Group className="text-center">
-              {image ? (
-                <div className={styles.ImageContainer}>
-                  <Image className={styles.Image} src={image} alt="Post image" />
-                </div>
-              ) : (
-                <div 
-                  className={styles.UploadContainer}
-                  onClick={() => imageInput.current.click()}
-                >
-                  <Asset 
-                    src={Upload} 
-                    message="Click or tap to upload an image" 
-                  />
-                </div>
-              )}
-
-              <Form.Control
-                type="file"
-                id="image-upload"
-                accept="image/*"
-                onChange={handleChangeImage}
-                ref={imageInput}
-                style={{ display: 'none' }}
-              />
-              
-              {image && (
-                <div className={styles.FileInputContainer}>
-                  <Button
-                    className={`${btnStyles.Button} ${btnStyles.Blue}`}
-                    onClick={() => imageInput.current.click()}
-                  >
-                    Change the image
-                  </Button>
-                </div>
-              )}
-            </Form.Group>
-            {errors?.image?.map((message, idx) => (
-              <Alert variant="warning" key={idx}>
-                {message}
-              </Alert>
-            ))}
-
-            <div className="d-md-none">{textFields}</div>
-          </Container>
-        </Col>
-        <Col md={5} lg={4} className="d-none d-md-block p-0 p-md-2">
-          <Container className={appStyles.Content}>{textFields}</Container>
-        </Col>
-      </Row>
+    <Form onSubmit={handleSubmit}>
+      <Container className={`${appStyles.Content} ${styles.Container}`}>
+        {textFields}
+      </Container>
     </Form>
   );
 }
