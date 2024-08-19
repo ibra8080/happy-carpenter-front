@@ -1,6 +1,7 @@
 import axios from "axios";
 
 axios.defaults.baseURL = "https://happy-carpenter-ebf6de9467cb.herokuapp.com/";
+axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.defaults.withCredentials = true;
 
 export const axiosReq = axios.create();
@@ -19,3 +20,17 @@ export const setAuthorizationHeader = (data) => {
     delete axiosRes.defaults.headers.common["Authorization"];
   }
 };
+
+// Set up interceptors
+axiosReq.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);

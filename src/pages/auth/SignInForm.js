@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { axiosReq } from "../../api/axiosDefaults";
+import { axiosReq, setAuthorizationHeader } from "../../api/axiosDefaults";
 import { useSetCurrentUser } from "../../contexts/CurrentUserContext";
 import { useRedirect } from "../../hooks/useRedirect";
 import Form from "react-bootstrap/Form";
@@ -38,14 +38,11 @@ function SignInForm() {
     setIsSubmitting(true);
     try {
       const { data } = await axiosReq.post("/dj-rest-auth/login/", signInData);
-      console.log("Login response data:", data);
       setCurrentUser(data.user);
-      // Store tokens in localStorage
-      localStorage.setItem('access_token', data.access_token);
-      localStorage.setItem('refresh_token', data.refresh_token);
+      setAuthorizationHeader(data);
       navigate("/");
     } catch (err) {
-      console.error("Login error:", err);
+      // console.error("Login error:", err);  // Uncomment for debugging
       if (err.response) {
         setErrors(err.response.data);
       } else {
