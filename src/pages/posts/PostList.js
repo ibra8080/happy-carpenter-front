@@ -14,12 +14,11 @@ function PostList({ message, filter = "" }) {
 
   const [query, setQuery] = useState("");
   const [imageFilter, setImageFilter] = useState("");
-  const [category, setCategory] = useState("");
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const { data } = await axiosReq.get(`/posts/?${filter}search=${query}&image_filter=${imageFilter}&categories=${category}`);
+        const { data } = await axiosReq.get(`/posts/?${filter}search=${query}&image_filter=${imageFilter}`);
         setPosts(data);
         setHasLoaded(true);
       } catch (err) {
@@ -35,7 +34,7 @@ function PostList({ message, filter = "" }) {
     return () => {
       clearTimeout(timer);
     };
-  }, [filter, query, imageFilter, category, pathname]);
+  }, [filter, query, imageFilter, pathname]);
 
   return (
     <Row className="h-100">
@@ -68,13 +67,6 @@ function PostList({ message, filter = "" }) {
             <option value="construction">Construction</option>
             <option value="other">Other</option>
           </Form.Control>
-          <Form.Control
-            type="text"
-            value={category}
-            onChange={(event) => setCategory(event.target.value)}
-            className="mr-sm-2"
-            placeholder="Filter by category"
-          />
         </Form>
 
         {hasLoaded ? (

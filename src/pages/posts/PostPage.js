@@ -37,9 +37,6 @@ function PostPage() {
         <Post {...post.results[0]} setPosts={setPost} postPage />
         <Container>
           <Badge variant="secondary">Filter: {post.results[0]?.image_filter}</Badge>
-          {post.results[0]?.categories.map((category, index) => (
-            <Badge key={index} variant="info" className="ml-2">{category}</Badge>
-          ))}
         </Container>
         <Container className="mt-3">
           {currentUser ? (
