@@ -42,7 +42,7 @@ function SignInForm() {
       setAuthorizationHeader(data);
       navigate("/");
     } catch (err) {
-      // console.error("Login error:", err);  // Uncomment for debugging
+      console.error("Login error:", err);
       if (err.response) {
         setErrors(err.response.data);
       } else {
@@ -52,6 +52,7 @@ function SignInForm() {
       setIsSubmitting(false);
     }
   };
+
 
   return (
     <Row className={styles.Row}>

@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Form, Button, Container, Alert } from "react-bootstrap";
 import { axiosReq } from "../../api/axiosDefaults";
-import { useCurrentUser } from "../../contexts/CurrentUserContext";
+import { useCurrentUser, useSetCurrentUser } from "../../contexts/CurrentUserContext";
 import appStyles from "../../App.module.css";
 import styles from "../../styles/ProfileEditForm.module.css";
 
 function ProfileEditForm() {
   const { id } = useParams();
   const currentUser = useCurrentUser();
+  const setCurrentUser = useSetCurrentUser();
   const navigate = useNavigate();
   const [profileData, setProfileData] = useState({
     name: "",
@@ -53,9 +54,13 @@ function ProfileEditForm() {
         formData.append(key, value);
       }
     }
-
+  
     try {
-      await axiosReq.put(`/profiles/${id}/`, formData);
+      const { data } = await axiosReq.put(`/profiles/${id}/`, formData);
+      setCurrentUser(prevUser => ({
+        ...prevUser,
+        profile: data
+      }));
       navigate(`/profiles/${id}`);
     } catch (err) {
       console.log(err);
