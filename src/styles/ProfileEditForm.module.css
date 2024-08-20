@@ -1,0 +1,36 @@
+.Form {
+    background-color: #ffffff;
+    border-radius: 4px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .Form label {
+    font-weight: bold;
+    color: var(--text-color);
+  }
+  
+  .Form input,
+  .Form textarea,
+  .Form select {
+    margin-bottom: 15px;
+  }
+  
+  .Form input:focus,
+  .Form textarea:focus,
+  .Form select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(166, 13, 13, 0.25);
+  }
+  
+  .ButtonContainer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .Button {
+    min-width: 100px;
+  }
+  
