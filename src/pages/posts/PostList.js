@@ -5,7 +5,9 @@ import Asset from '../../components/Asset';
 import appStyles from '../../App.module.css';
 import styles from '../../styles/PostsPage.module.css';
 import { useLocation } from 'react-router-dom';
-import { Container, Form, Col, Row } from 'react-bootstrap';
+import { Container, Form, Col, Row, Dropdown } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFilter } from '@fortawesome/free-solid-svg-icons';
 
 function PostList({ message, filter = "" }) {
   const [posts, setPosts] = useState({ results: [] });
@@ -36,38 +38,54 @@ function PostList({ message, filter = "" }) {
     };
   }, [filter, query, imageFilter, pathname]);
 
+  const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
+    <button
+      className={styles.FilterButton}
+      ref={ref}
+      onClick={(e) => {
+        e.preventDefault();
+        onClick(e);
+      }}
+    >
+      {children}
+    </button>
+  ));
+
   return (
     <Row className="h-100">
       <Col className="py-2 p-0 p-lg-2" lg={8}>
-        <i className={`fas fa-search ${styles.SearchIcon}`} />
-        <Form
-          className={styles.SearchBar}
-          onSubmit={(event) => event.preventDefault()}
-        >
-          <Form.Control
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            type="text"
-            className="mr-sm-2"
-            placeholder="Search posts"
-          />
-          <Form.Control
-            as="select"
-            value={imageFilter}
-            onChange={(event) => setImageFilter(event.target.value)}
-            className="mr-sm-2"
+        <div className={styles.SearchFilterContainer}>
+          <Form
+            className={styles.SearchBar}
+            onSubmit={(event) => event.preventDefault()}
           >
-            <option value="">All Image Filters</option>
-            <option value="normal">Normal</option>
-            <option value="furniture">Furniture</option>
-            <option value="antiques">Antiques</option>
-            <option value="renovation&repair">Renovation & Repair</option>
-            <option value="artworks">Artworks</option>
-            <option value="tools">Tools</option>
-            <option value="construction">Construction</option>
-            <option value="other">Other</option>
-          </Form.Control>
-        </Form>
+            <i className={`fas fa-search ${styles.SearchIcon}`} />
+            <Form.Control
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              type="text"
+              className="mr-sm-2"
+              placeholder="Search posts"
+            />
+          </Form>
+          <Dropdown className={styles.FilterDropdown}>
+            <Dropdown.Toggle as={CustomToggle}>
+              <FontAwesomeIcon icon={faFilter} />
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={() => setImageFilter("")}>All</Dropdown.Item>
+              <Dropdown.Item onClick={() => setImageFilter("normal")}>Normal</Dropdown.Item>
+              <Dropdown.Item onClick={() => setImageFilter("furniture")}>Furniture</Dropdown.Item>
+              <Dropdown.Item onClick={() => setImageFilter("antiques")}>Antiques</Dropdown.Item>
+              <Dropdown.Item onClick={() => setImageFilter("renovation&repair")}>Renovation & Repair</Dropdown.Item>
+              <Dropdown.Item onClick={() => setImageFilter("artworks")}>Artworks</Dropdown.Item>
+              <Dropdown.Item onClick={() => setImageFilter("tools")}>Tools</Dropdown.Item>
+              <Dropdown.Item onClick={() => setImageFilter("construction")}>Construction</Dropdown.Item>
+              <Dropdown.Item onClick={() => setImageFilter("other")}>Other</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
 
         {hasLoaded ? (
           <>

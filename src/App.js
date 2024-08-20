@@ -12,6 +12,11 @@ import PostsPage from "./pages/posts/PostsPage";
 import PostPage from "./pages/posts/PostPage";
 import PostEditForm from "./pages/posts/PostEditForm";
 import "./api/axiosInterceptor";
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faFilter } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faFilter);
+
 
 function App() {
   useEffect(() => {
