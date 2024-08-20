@@ -14,6 +14,10 @@ import PostEditForm from "./pages/posts/PostEditForm";
 import "./api/axiosInterceptor";
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
+import ProfileList from "./pages/profiles/ProfileList";
+import ProfileDetail from "./pages/profiles/ProfileDetail";
+import ProfileEditForm from "./pages/profiles/ProfileEditForm";
+
 
 library.add(faFilter);
 
@@ -45,6 +49,9 @@ function App() {
               <Route path="/posts/:id" element={<PostPage />} />
               <Route path="/posts/:id/edit" element={<PostEditForm />} />
               <Route path="*" element={<p>Page not found!</p>} />
+              <Route exact path="/profiles" element={<ProfileList />} />
+              <Route exact path="/profiles/:id" element={<ProfileDetail />} />
+              <Route exact path="/profiles/:id/edit" element={<ProfileEditForm />} />
             </Routes>
           </Container>
         </div>
