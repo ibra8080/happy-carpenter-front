@@ -38,6 +38,7 @@ function SignInForm() {
     setIsSubmitting(true);
     try {
       const { data } = await axiosReq.post("/dj-rest-auth/login/", signInData);
+      console.log("Initial data", data)
       setAuthorizationHeader(data);
       
       // Fetch user data after successful login
@@ -47,7 +48,7 @@ function SignInForm() {
       // Fetch profile data
       if (userData?.id) {  // Changed from pk to id
         try {
-          const { data: profileData } = await axiosReq.get(`profiles/${userData.id}/`);
+          const { data: profileData } = await axiosReq.get(`profiles/${userData.pk}/`);
           console.log("Profile data after login:", profileData);
           
           // Combine user and profile data
