@@ -49,6 +49,19 @@ const NavBar = () => {
       >
         <i className="fas fa-heart"></i>Liked
       </NavLink>
+      {currentUser?.profile ? (
+        <NavLink
+          className={styles.NavLink}
+          to={`/profiles/${currentUser.profile.id}`}
+          onClick={() => setExpanded(false)}
+        >
+          <Avatar src={currentUser.profile.image} text="Profile" height={40} />
+        </NavLink>
+      ) : (
+        <span className={styles.NavLink}>
+          <i className="fas fa-spinner fa-spin"></i>Loading Profile...
+        </span>
+      )}
       <NavLink 
         className={styles.NavLink} 
         to="/" 
@@ -59,23 +72,6 @@ const NavBar = () => {
       >
         <i className="fas fa-sign-out-alt"></i>Sign out
       </NavLink>
-      {currentUser?.profile ? (
-        <NavLink
-          className={styles.NavLink}
-          to={`/profiles/${currentUser.profile.id}`}
-          onClick={() => setExpanded(false)}
-        >
-          <Avatar src={currentUser.profile.image} text="Profile" height={40} />
-        </NavLink>
-      ) : (
-        <NavLink
-          className={styles.NavLink}
-          to="/profiles/create"
-          onClick={() => setExpanded(false)}
-        >
-          <i className="fas fa-user-plus"></i>Create Profile
-        </NavLink>
-      )}
     </>
   );
 
@@ -120,9 +116,7 @@ const NavBar = () => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ml-auto text-left">
             <NavLink
-              exact
               className={styles.NavLink}
-              activeClassName={styles.Active}
               to="/"
               onClick={() => setExpanded(false)}
             >

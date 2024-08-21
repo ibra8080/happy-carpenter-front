@@ -1,7 +1,5 @@
-import { createContext, useContext, useEffect, useState, useMemo } from "react";
-import axios from "axios";
+import { createContext, useContext, useEffect, useState } from "react";
 import { axiosReq, axiosRes } from "../api/axiosDefaults";
-import { useNavigate } from "react-router-dom";
 
 export const CurrentUserContext = createContext();
 export const SetCurrentUserContext = createContext();
@@ -11,62 +9,41 @@ export const useSetCurrentUser = () => useContext(SetCurrentUserContext);
 
 export const CurrentUserProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
-  const navigate = useNavigate();
 
   const handleMount = async () => {
     try {
-      const { data } = await axiosRes.get("dj-rest-auth/user/");
-      setCurrentUser(data);
+      const { data: userData } = await axiosRes.get("dj-rest-auth/user/");
+      console.log("User data fetched:", userData);
+      
+      if (userData?.id) {
+        try {
+          const { data: profileData } = await axiosReq.get(`profiles/${userData.id}/`);
+          console.log("Profile data fetched:", profileData);
+          
+          // Combine user and profile data
+          const combinedData = {
+            ...userData,
+            profile: profileData
+          };
+          
+          setCurrentUser(combinedData);
+          console.log("Combined user and profile data:", combinedData);
+        } catch (err) {
+          console.log("Error fetching profile:", err);
+          // If profile doesn't exist, set user data without profile
+          setCurrentUser(userData);
+        }
+      } else {
+        setCurrentUser(userData);
+      }
     } catch (err) {
-      console.log(err);
+      console.log("Error fetching user:", err);
     }
   };
 
   useEffect(() => {
     handleMount();
   }, []);
-
-  useMemo(() => {
-    axiosReq.interceptors.request.use(
-      async (config) => {
-        try {
-          await axios.post("/dj-rest-auth/token/refresh/");
-        } catch (err) {
-          setCurrentUser((prevCurrentUser) => {
-            if (prevCurrentUser) {
-              navigate("/signin");
-            }
-            return null;
-          });
-          return config;
-        }
-        return config;
-      },
-      (err) => {
-        return Promise.reject(err);
-      }
-    );
-
-    axiosRes.interceptors.response.use(
-      (response) => response,
-      async (err) => {
-        if (err.response?.status === 401) {
-          try {
-            await axios.post("/dj-rest-auth/token/refresh/");
-          } catch (err) {
-            setCurrentUser((prevCurrentUser) => {
-              if (prevCurrentUser) {
-                navigate("/signin");
-              }
-              return null;
-            });
-          }
-          return axios(err.config);
-        }
-        return Promise.reject(err);
-      }
-    );
-  }, [navigate]);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>

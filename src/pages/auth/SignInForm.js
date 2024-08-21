@@ -38,8 +38,33 @@ function SignInForm() {
     setIsSubmitting(true);
     try {
       const { data } = await axiosReq.post("/dj-rest-auth/login/", signInData);
-      setCurrentUser(data.user);
       setAuthorizationHeader(data);
+      
+      // Fetch user data after successful login
+      const { data: userData } = await axiosReq.get("dj-rest-auth/user/");
+      console.log("User data after login:", userData);
+      
+      // Fetch profile data
+      if (userData?.id) {  // Changed from pk to id
+        try {
+          const { data: profileData } = await axiosReq.get(`profiles/${userData.id}/`);
+          console.log("Profile data after login:", profileData);
+          
+          // Combine user and profile data
+          const combinedData = {
+            ...userData,
+            profile: profileData
+          };
+          
+          setCurrentUser(combinedData);
+          console.log("Combined user and profile data:", combinedData);
+        } catch (profileErr) {
+          console.log("Error fetching profile:", profileErr);
+          // If profile doesn't exist, set user data without profile
+          setCurrentUser(userData);
+        }
+      }
+      
       navigate("/");
     } catch (err) {
       console.error("Login error:", err);
@@ -52,7 +77,6 @@ function SignInForm() {
       setIsSubmitting(false);
     }
   };
-
 
   return (
     <Row className={styles.Row}>
