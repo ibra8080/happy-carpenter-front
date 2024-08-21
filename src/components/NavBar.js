@@ -50,21 +50,26 @@ const NavBar = () => {
         <i className="fas fa-heart"></i>Liked
       </NavLink>
       {currentUser?.profile ? (
-        <NavLink
-          className={styles.NavLink}
-          to={`/profiles/${currentUser.profile.id}`}
-          onClick={() => setExpanded(false)}
-        >
-          <Avatar src={currentUser.profile.image} text="Profile" height={40} />
-        </NavLink>
-      ) : (
-        <span className={styles.NavLink}>
-          <i className="fas fa-spinner fa-spin"></i>Loading Profile...
-        </span>
-      )}
-      <NavLink 
-        className={styles.NavLink} 
-        to="/" 
+      <NavLink
+        className={styles.NavLink}
+        to={`/profiles/${currentUser.profile.id}`}
+        onClick={() => setExpanded(false)}
+      >
+        <Avatar 
+          src={currentUser.profile.image} 
+          text="Profile" 
+          height={40} 
+        />
+      </NavLink>
+    ) : currentUser ? (
+      <span className={styles.NavLink}>
+        <i className="fas fa-spinner fa-spin"></i>Loading Profile...
+      </span>
+    ) : null}
+    
+      <NavLink
+        className={styles.NavLink}
+        to="/"
         onClick={() => {
           handleSignOut();
           setExpanded(false);
@@ -77,14 +82,14 @@ const NavBar = () => {
 
   const loggedOutIcons = (
     <>
-      <NavLink 
+      <NavLink
         className={styles.NavLink}
         to="/signin"
         onClick={() => setExpanded(false)}
       >
         <i className="fas fa-sign-in-alt"></i>Sign in
       </NavLink>
-      <NavLink 
+      <NavLink
         to="/signup"
         className={styles.NavLink}
         onClick={() => setExpanded(false)}
