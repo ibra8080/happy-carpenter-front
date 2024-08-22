@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { axiosRes, axiosReq } from "../api/axiosDefaults";
 
-
 export const CurrentUserContext = createContext();
 export const SetCurrentUserContext = createContext();
 
@@ -13,27 +12,31 @@ export const CurrentUserProvider = ({ children }) => {
 
   const handleMount = async () => {
     try {
+      // Fetch user data from the API
       const { data: userData } = await axiosRes.get("dj-rest-auth/user/");
       console.log("User data fetched:", userData);
-      
+
       if (userData?.username) {
         try {
+          // Fetch profiles data
           const { data: profilesData } = await axiosReq.get('profiles/');
           console.log("Profiles data fetched:", profilesData);
           
+          // Find the profile that belongs to the logged-in user
           let userProfile;
           if (Array.isArray(profilesData)) {
             userProfile = profilesData.find(profile => profile.owner === userData.username);
           } else if (profilesData && Array.isArray(profilesData.results)) {
             userProfile = profilesData.results.find(profile => profile.owner === userData.username);
           }
-          
+
+          // Combine user data and profile data
           if (userProfile) {
             const combinedData = {
               ...userData,
               profile: userProfile
             };
-            
+
             setCurrentUser(combinedData);
             console.log("Combined user and profile data:", combinedData);
           } else {

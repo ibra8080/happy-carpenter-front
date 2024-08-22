@@ -37,18 +37,19 @@ function SignInForm() {
     event.preventDefault();
     setIsSubmitting(true);
     try {
+      // Log in the user
       const { data } = await axiosReq.post("/dj-rest-auth/login/", signInData);
-      console.log("Initial data", data)
+      console.log("Initial data", data);
       setAuthorizationHeader(data);
-      
+
       // Fetch user data after successful login
       const { data: userData } = await axiosReq.get("dj-rest-auth/user/");
       console.log("User data after login:", userData);
-      
+
       // Fetch profile data
-      if (userData?.id) {  // Changed from pk to id
+      if (userData?.id) {  // Ensure you use the correct identifier for user data
         try {
-          const { data: profileData } = await axiosReq.get(`profiles/${userData.pk}/`);
+          const { data: profileData } = await axiosReq.get(`profiles/${userData.id}/`);
           console.log("Profile data after login:", profileData);
           
           // Combine user and profile data
@@ -66,6 +67,7 @@ function SignInForm() {
         }
       }
       
+      // Navigate to the home page
       navigate("/");
     } catch (err) {
       console.error("Login error:", err);
