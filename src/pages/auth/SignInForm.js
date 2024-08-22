@@ -9,6 +9,7 @@ import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Container from "react-bootstrap/Container";
+
 import styles from "../../styles/SignInUpForm.module.css";
 import btnStyles from "../../styles/Button.module.css";
 import appStyles from "../../App.module.css";
@@ -37,15 +38,18 @@ function SignInForm() {
     setIsSubmitting(true);
     try {
       const { data } = await axiosReq.post("/dj-rest-auth/login/", signInData);
+      console.log("Initial data", data)
       setAuthorizationHeader(data);
       
       // Fetch user data after successful login
       const { data: userData } = await axiosReq.get("dj-rest-auth/user/");
+      console.log("User data after login:", userData);
       
       // Fetch profile data
-      if (userData?.pk) {
+      if (userData?.id) {  // Changed from pk to id
         try {
           const { data: profileData } = await axiosReq.get(`profiles/${userData.pk}/`);
+          console.log("Profile data after login:", profileData);
           
           // Combine user and profile data
           const combinedData = {
@@ -54,16 +58,14 @@ function SignInForm() {
           };
           
           setCurrentUser(combinedData);
+          console.log("Combined user and profile data:", combinedData);
         } catch (profileErr) {
           console.log("Error fetching profile:", profileErr);
           // If profile doesn't exist, set user data without profile
           setCurrentUser(userData);
         }
-      } else {
-        setCurrentUser(userData);
       }
       
-      // Navigate to home page after setting current user
       navigate("/");
     } catch (err) {
       console.error("Login error:", err);

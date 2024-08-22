@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { axiosRes, axiosReq } from "../api/axiosDefaults";
 
+
 export const CurrentUserContext = createContext();
 export const SetCurrentUserContext = createContext();
 
