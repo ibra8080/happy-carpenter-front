@@ -102,7 +102,15 @@ const Post = (props) => {
         </Media>
       </Card.Body>
       <Link to={`/posts/${id}`}>
-        <Card.Img src={image} alt={title} className={styles.PostImage} />
+        <Card.Img 
+          src={image} 
+          alt={title} 
+          className={styles.PostImage}
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = "https://res.cloudinary.com/ds5wgelgc/image/upload/v1722748736/default_post_ixahqa.jpg"; // Replace with your default image path
+          }}
+        />
       </Link>
       <Card.Body>
         {title && <Card.Title className="text-center">{title}</Card.Title>}

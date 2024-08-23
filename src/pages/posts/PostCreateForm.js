@@ -1,25 +1,22 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { Form, Button, Container, Alert, Image } from "react-bootstrap";
 import styles from "../../styles/PostCreateEditForm.module.css";
 import appStyles from "../../App.module.css";
 import btnStyles from "../../styles/Button.module.css";
 import { useNavigate } from "react-router-dom";
 import { axiosReq } from "../../api/axiosDefaults";
-// import { useRedirect } from "../../hooks/useRedirect";
 
 function PostCreateForm() {
   const [errors, setErrors] = useState({});
   const [postData, setPostData] = useState({
     title: "",
     content: "",
-    image: "",
+    image: null,
     image_filter: "normal",
     categories: [],
   });
-  const { title, content, image_filter, categories } = postData;
+  const { title, content, image, image_filter, categories } = postData;
   const navigate = useNavigate();
-  const imageInput = useRef(null);
-  // const isLoading = useRedirect("loggedOut");
 
   const handleChange = (event) => {
     const { name, value, type, files } = event.target;
@@ -32,19 +29,23 @@ function PostCreateForm() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData();
-
+  
     formData.append("title", title);
     formData.append("content", content);
     formData.append("image_filter", image_filter);
-    if (imageInput?.current?.files[0]) {
-      formData.append("image", imageInput.current.files[0]);
+    if (image) {
+      formData.append("image", image);
     }
-    categories.forEach((category, index) => {
-      formData.append(`categories[${index}]`, category);
+    categories.forEach((category) => {
+      formData.append("categories", category);
     });
-
+  
     try {
-      const { data } = await axiosReq.post("/posts/", formData);
+      const { data } = await axiosReq.post("/posts/", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       navigate(`/posts/${data.id}`);
     } catch (err) {
       console.log(err);
@@ -53,7 +54,7 @@ function PostCreateForm() {
       }
     }
   };
-
+  
   const textFields = (
     <>
       <Form.Group>
@@ -91,7 +92,6 @@ function PostCreateForm() {
         <Form.Label>Image</Form.Label>
         <Form.File
           id="image-upload"
-          ref={imageInput}
           accept="image/*"
           onChange={handleChange}
           name="image"
@@ -103,8 +103,8 @@ function PostCreateForm() {
         </Alert>
       ))}
 
-      {postData.image && (
-        <Image src={URL.createObjectURL(postData.image)} rounded fluid />
+      {image && (
+        <Image src={URL.createObjectURL(image)} rounded fluid />
       )}
 
       <Form.Group>
