@@ -1,13 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { axiosReq } from "../../api/axiosDefaults";
-
-import styles from "../../styles/SignInUpForm.module.css";
-import btnStyles from "../../styles/Button.module.css";
-import appStyles from "../../App.module.css";
 import { useSetCurrentUser } from "../../contexts/CurrentUserContext";
 import { useRedirect } from "../../hooks/useRedirect";
-
 import {
   Form,
   Button,
@@ -17,35 +12,33 @@ import {
   Alert,
 } from "react-bootstrap";
 
+import styles from "../../styles/SignInUpForm.module.css";
+import btnStyles from "../../styles/Button.module.css";
+import appStyles from "../../App.module.css";
+
 const SignUpForm = () => {
   const isLoading = useRedirect("loggedOut");
-
   const setCurrentUser = useSetCurrentUser();
-    const [signUpData, setSignUpData] = useState({
-      username: "",
-      email: "",
-      password1: "",
-      password2: "",
-      first_name: "",
-      last_name: "",
-      user_type: "amateur",
-      years_of_experience: "",
-      specialties: "",
-      portfolio_url: "",
-      interests: [],
-      address: "",
-      profile_image: null,
-    });
-    const { 
-      username, email, password1, password2, first_name, last_name,
-      user_type, years_of_experience, specialties, portfolio_url, interests, address
-    } = signUpData;
-  
-    const [errors, setErrors] = useState({});
-    const [profileImagePreview, setProfileImagePreview] = useState(null);
-  
-    const navigate = useNavigate();
-    
+  const [signUpData, setSignUpData] = useState({
+    username: "",
+    email: "",
+    password1: "",
+    password2: "",
+    first_name: "",
+    last_name: "",
+    user_type: "amateur",
+    years_of_experience: "",
+    specialties: "",
+    portfolio_url: "",
+    interests: "",
+    address: "",
+    profile_image: null,
+  });
+  const [errors, setErrors] = useState({});
+  const [profileImagePreview, setProfileImagePreview] = useState(null);
+
+  const navigate = useNavigate();
+
   const handleChange = (event) => {
     const { name, value, type, files } = event.target;
     if (type === "file") {
@@ -57,7 +50,7 @@ const SignUpForm = () => {
     } else {
       setSignUpData({
         ...signUpData,
-        [name]: name === 'interests' ? value.split(',').map(item => item.trim()) : value,
+        [name]: value,
       });
     }
   };
@@ -65,42 +58,31 @@ const SignUpForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData();
-    for (const [key, value] of Object.entries(signUpData)) {
+  
+    Object.keys(signUpData).forEach(key => {
       if (key === "interests") {
-        formData.append(key, JSON.stringify(value));
-      } else if (key === "profile_image" && value instanceof File) {
-        formData.append(key, value, value.name);
+        formData.append(key, JSON.stringify(signUpData[key].split(',').map(item => item.trim())));
+      } else if (key === "profile_image" && signUpData[key]) {
+        formData.append(key, signUpData[key], signUpData[key].name);
+      } else if (key === "years_of_experience") {
+        formData.append(key, signUpData[key] === "" ? null : signUpData[key]);
       } else {
-        formData.append(key, value);
+        formData.append(key, signUpData[key]);
       }
-    }
-    
+    });
+  
     try {
-      const response = await axiosReq.post("/dj-rest-auth/registration/", formData);
-      console.log("Registration response:", response.data);
-      
-      if (response.data.user) {
-        // Assuming the backend returns the user data including the profile image URL
-        setCurrentUser(response.data.user);
-        navigate("/");
-      } else {
-        console.error("Unexpected response structure:", response.data);
-        setErrors({ non_field_errors: ["An unexpected error occurred. Please try again."] });
-      }
+      const { data } = await axiosReq.post("/dj-rest-auth/registration/", formData);
+      console.log("Registration response:", data);
+      setCurrentUser(data.user);
+      navigate("/");
     } catch (err) {
       console.error('Registration error:', err);
-      if (err.response) {
-        console.error('Error response:', err.response.data);
-        setErrors(err.response.data);
-      } else {
-        setErrors({ non_field_errors: ["An unexpected error occurred. Please try again."] });
-      }
+      setErrors(err.response?.data || {});
     }
   };
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  if (isLoading) return <div>Loading...</div>;
   
   return (
     <Row className={styles.Row}>
@@ -110,13 +92,13 @@ const SignUpForm = () => {
 
           <Form onSubmit={handleSubmit}>
             <Form.Group controlId="username">
-              <Form.Label className="d-none">username</Form.Label>
+              <Form.Label className="d-none">Username</Form.Label>
               <Form.Control
                 className={styles.Input}
                 type="text"
                 placeholder="Username"
                 name="username"
-                value={username}
+                value={signUpData.username}
                 onChange={handleChange}
                 required
               />
@@ -126,14 +108,15 @@ const SignUpForm = () => {
             ))}
 
             <Form.Group controlId="email">
-              <Form.Label className="d-none">Email (optional)</Form.Label>
+              <Form.Label className="d-none">Email</Form.Label>
               <Form.Control
                 className={styles.Input}
                 type="email"
-                placeholder="Email (optional)"
+                placeholder="Email"
                 name="email"
-                value={email}
+                value={signUpData.email}
                 onChange={handleChange}
+                required
               />
             </Form.Group>
             {errors.email?.map((message, idx) => (
@@ -147,7 +130,7 @@ const SignUpForm = () => {
                 type="text"
                 placeholder="First Name"
                 name="first_name"
-                value={first_name}
+                value={signUpData.first_name}
                 onChange={handleChange}
                 required
               />
@@ -163,7 +146,7 @@ const SignUpForm = () => {
                 type="text"
                 placeholder="Last Name"
                 name="last_name"
-                value={last_name}
+                value={signUpData.last_name}
                 onChange={handleChange}
                 required
               />
@@ -179,7 +162,7 @@ const SignUpForm = () => {
                 type="password"
                 placeholder="Password"
                 name="password1"
-                value={password1}
+                value={signUpData.password1}
                 onChange={handleChange}
                 required
               />
@@ -195,7 +178,7 @@ const SignUpForm = () => {
                 type="password"
                 placeholder="Confirm password"
                 name="password2"
-                value={password2}
+                value={signUpData.password2}
                 onChange={handleChange}
                 required
               />
@@ -210,7 +193,7 @@ const SignUpForm = () => {
                 className={styles.Input}
                 as="select"
                 name="user_type"
-                value={user_type}
+                value={signUpData.user_type}
                 onChange={handleChange}
                 required
               >
@@ -222,7 +205,7 @@ const SignUpForm = () => {
               <Alert variant="warning" key={idx}>{message}</Alert>
             ))}
 
-            {user_type === 'professional' && (
+            {signUpData.user_type === 'professional' && (
               <>
                 <Form.Group controlId="years_of_experience">
                   <Form.Label>Years of Experience</Form.Label>
@@ -230,7 +213,7 @@ const SignUpForm = () => {
                     className={styles.Input}
                     type="number"
                     name="years_of_experience"
-                    value={years_of_experience}
+                    value={signUpData.years_of_experience}
                     onChange={handleChange}
                     required
                   />
@@ -245,7 +228,7 @@ const SignUpForm = () => {
                     className={styles.Input}
                     type="text"
                     name="specialties"
-                    value={specialties}
+                    value={signUpData.specialties}
                     onChange={handleChange}
                     required
                   />
@@ -260,7 +243,7 @@ const SignUpForm = () => {
                     className={styles.Input}
                     type="url"
                     name="portfolio_url"
-                    value={portfolio_url}
+                    value={signUpData.portfolio_url}
                     onChange={handleChange}
                   />
                 </Form.Group>
@@ -276,7 +259,7 @@ const SignUpForm = () => {
                 className={styles.Input}
                 type="text"
                 name="interests"
-                value={interests.join(', ')}
+                value={signUpData.interests}
                 onChange={handleChange}
               />
             </Form.Group>
@@ -290,7 +273,7 @@ const SignUpForm = () => {
                 className={styles.Input}
                 type="text"
                 name="address"
-                value={address}
+                value={signUpData.address}
                 onChange={handleChange}
               />
             </Form.Group>
@@ -298,8 +281,7 @@ const SignUpForm = () => {
               <Alert variant="warning" key={idx}>{message}</Alert>
             ))}
 
-
-          <Form.Group controlId="profile_image">
+            <Form.Group controlId="profile_image">
               <Form.Label className={styles.FileInputLabel}>Upload Profile Image</Form.Label>
               <Form.Control
                 className={styles.FileInput}

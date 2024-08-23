@@ -34,8 +34,12 @@ export const CurrentUserProvider = ({ children }) => {
           if (userProfile) {
             const combinedData = {
               ...userData,
-              profile: userProfile
-            };
+              profile: {
+                ...userProfile,
+                is_active: true
+              }
+            };            
+            
 
             setCurrentUser(combinedData);
             console.log("Combined user and profile data:", combinedData);
