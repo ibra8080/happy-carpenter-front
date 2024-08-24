@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Form, Button, Container, Alert } from "react-bootstrap";
+import { Form, Button, Container, Alert, Image } from "react-bootstrap";
 import { axiosReq } from "../../api/axiosDefaults";
 import { useCurrentUser, useSetCurrentUser } from "../../contexts/CurrentUserContext";
 import appStyles from "../../App.module.css";
@@ -41,7 +41,7 @@ function ProfileEditForm() {
       }
     };
     fetchProfile();
-}, [currentUser, navigate]);
+  }, [currentUser, navigate]);
 
   const handleChange = (event) => {
     setProfileData({
@@ -56,11 +56,13 @@ function ProfileEditForm() {
     for (const [key, value] of Object.entries(profileData)) {
       if (key === 'interests') {
         formData.append(key, JSON.stringify(value));
+      } else if (key === 'image' && value instanceof File) {
+        formData.append(key, value);
       } else {
         formData.append(key, value);
       }
     }
-  
+
     try {
       const { data } = await axiosReq.put(`/profiles/${id}/`, formData);
       setCurrentUser(prevUser => ({
@@ -73,6 +75,16 @@ function ProfileEditForm() {
       if (err.response?.status !== 401) {
         setErrors(err.response?.data);
       }
+    }
+  };
+
+  const handleImageChange = (event) => {
+    if (event.target.files.length) {
+      URL.revokeObjectURL(profileData.image);
+      setProfileData({
+        ...profileData,
+        image: URL.createObjectURL(event.target.files[0])
+      });
     }
   };
 
@@ -98,16 +110,142 @@ function ProfileEditForm() {
           </Alert>
         ))}
 
-        {/* Add other form fields here */}
+        <Form.Group>
+          <Form.Label>Bio</Form.Label>
+          <Form.Control
+            as="textarea"
+            rows={4}
+            name="content"
+            value={profileData.content}
+            onChange={handleChange}
+          />
+        </Form.Group>
+        {errors?.content?.map((message, idx) => (
+          <Alert variant="warning" key={idx}>
+            {message}
+          </Alert>
+        ))}
+
+        <Form.Group>
+          <Form.Label>Profile Image</Form.Label>
+          {profileData.image && (
+            <figure>
+              <Image src={profileData.image} fluid />
+            </figure>
+          )}
+          <Form.File
+            id="image-upload"
+            accept="image/*"
+            onChange={handleImageChange}
+          />
+        </Form.Group>
+        {errors?.image?.map((message, idx) => (
+          <Alert variant="warning" key={idx}>
+            {message}
+          </Alert>
+        ))}
+
+        <Form.Group>
+          <Form.Label>User Type</Form.Label>
+          <Form.Control
+            as="select"
+            name="user_type"
+            value={profileData.user_type}
+            onChange={handleChange}
+          >
+            <option value="amateur">Amateur</option>
+            <option value="professional">Professional</option>
+          </Form.Control>
+        </Form.Group>
+        {errors?.user_type?.map((message, idx) => (
+          <Alert variant="warning" key={idx}>
+            {message}
+          </Alert>
+        ))}
+
+        <Form.Group>
+          <Form.Label>Years of Experience</Form.Label>
+          <Form.Control
+            type="number"
+            name="years_of_experience"
+            value={profileData.years_of_experience}
+            onChange={handleChange}
+          />
+        </Form.Group>
+        {errors?.years_of_experience?.map((message, idx) => (
+          <Alert variant="warning" key={idx}>
+            {message}
+          </Alert>
+        ))}
+
+        <Form.Group>
+          <Form.Label>Specialties</Form.Label>
+          <Form.Control
+            type="text"
+            name="specialties"
+            value={profileData.specialties}
+            onChange={handleChange}
+          />
+        </Form.Group>
+        {errors?.specialties?.map((message, idx) => (
+          <Alert variant="warning" key={idx}>
+            {message}
+          </Alert>
+        ))}
+
+        <Form.Group>
+          <Form.Label>Portfolio URL</Form.Label>
+          <Form.Control
+            type="url"
+            name="portfolio_url"
+            value={profileData.portfolio_url}
+            onChange={handleChange}
+          />
+        </Form.Group>
+        {errors?.portfolio_url?.map((message, idx) => (
+          <Alert variant="warning" key={idx}>
+            {message}
+          </Alert>
+        ))}
+
+        <Form.Group>
+          <Form.Label>Interests (comma-separated)</Form.Label>
+          <Form.Control
+            type="text"
+            name="interests"
+            value={profileData.interests.join(', ')}
+            onChange={(e) => setProfileData({...profileData, interests: e.target.value.split(', ')})}
+          />
+        </Form.Group>
+        {errors?.interests?.map((message, idx) => (
+          <Alert variant="warning" key={idx}>
+            {message}
+          </Alert>
+        ))}
+
+        <Form.Group>
+          <Form.Label>Address</Form.Label>
+          <Form.Control
+            type="text"
+            name="address"
+            value={profileData.address}
+            onChange={handleChange}
+          />
+        </Form.Group>
+        {errors?.address?.map((message, idx) => (
+          <Alert variant="warning" key={idx}>
+            {message}
+          </Alert>
+        ))}
 
         <Button
           className={`${appStyles.Button} ${appStyles.Blue}`}
           onClick={() => navigate(-1)}
         >
-          cancel
+          Cancel
         </Button>
         <Button className={`${appStyles.Button} ${appStyles.Blue}`} type="submit">
-          save
+          Save
         </Button>
       </Form>
     </Container>
