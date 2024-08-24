@@ -15,7 +15,7 @@ export const CurrentUserProvider = ({ children }) => {
       // Fetch user data from the API
       const { data: userData } = await axiosRes.get("dj-rest-auth/user/");
       console.log("User data fetched:", userData);
-
+  
       if (userData?.username) {
         try {
           // Fetch profiles data
@@ -29,7 +29,7 @@ export const CurrentUserProvider = ({ children }) => {
           } else if (profilesData && Array.isArray(profilesData.results)) {
             userProfile = profilesData.results.find(profile => profile.owner === userData.username);
           }
-
+  
           // Combine user data and profile data
           if (userProfile) {
             const combinedData = {
@@ -40,7 +40,6 @@ export const CurrentUserProvider = ({ children }) => {
               }
             };            
             
-
             setCurrentUser(combinedData);
             console.log("Combined user and profile data:", combinedData);
           } else {
@@ -57,11 +56,11 @@ export const CurrentUserProvider = ({ children }) => {
     } catch (err) {
       console.log("Error fetching user:", err);
     }
-  };
+  };  
 
   useEffect(() => {
     handleMount();
-  }, []);
+  }, []);  
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
