@@ -12,55 +12,21 @@ export const CurrentUserProvider = ({ children }) => {
 
   const handleMount = async () => {
     try {
-      // Fetch user data from the API
-      const { data: userData } = await axiosRes.get("dj-rest-auth/user/");
-      console.log("User data fetched:", userData);
-  
-      if (userData?.username) {
-        try {
-          // Fetch profiles data
-          const { data: profilesData } = await axiosReq.get('profiles/');
-          console.log("Profiles data fetched:", profilesData);
-          
-          // Find the profile that belongs to the logged-in user
-          let userProfile;
-          if (Array.isArray(profilesData)) {
-            userProfile = profilesData.find(profile => profile.owner === userData.username);
-          } else if (profilesData && Array.isArray(profilesData.results)) {
-            userProfile = profilesData.results.find(profile => profile.owner === userData.username);
-          }
-  
-          // Combine user data and profile data
-          if (userProfile) {
-            const combinedData = {
-              ...userData,
-              profile: {
-                ...userProfile,
-                is_active: true
-              }
-            };            
-            
-            setCurrentUser(combinedData);
-            console.log("Combined user and profile data:", combinedData);
-          } else {
-            console.log("No profile found for user");
-            setCurrentUser(userData);
-          }
-        } catch (err) {
-          console.log("Error fetching profile:", err);
-          setCurrentUser(userData);
-        }
-      } else {
-        setCurrentUser(userData);
-      }
+      const { data } = await axiosRes.get("dj-rest-auth/user/");
+      setCurrentUser(data);
+      const profileResponse = await axiosReq.get(`/profiles/${data.pk}/`);
+      setCurrentUser(prevUser => ({
+        ...prevUser,
+        profile: profileResponse.data
+      }));
     } catch (err) {
-      console.log("Error fetching user:", err);
+      console.log("Error fetching user or profile:", err);
     }
-  };  
+  };
 
   useEffect(() => {
     handleMount();
-  }, []);  
+  }, []);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>

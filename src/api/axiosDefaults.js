@@ -38,7 +38,7 @@ axiosRes.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    if (error.response.status === 401 && !originalRequest._retry) {
+    if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       const refreshToken = localStorage.getItem('refresh_token');
       if (refreshToken) {
@@ -51,7 +51,12 @@ axiosRes.interceptors.response.use(
         } catch (refreshError) {
           console.log('Refresh token error:', refreshError);
           setAuthorizationHeader(null);
+          // Optionally, redirect to login page or dispatch a logout action here
         }
+      } else {
+        // No refresh token available, clear any existing tokens
+        setAuthorizationHeader(null);
+        // Optionally, redirect to login page or dispatch a logout action here
       }
     }
     return Promise.reject(error);

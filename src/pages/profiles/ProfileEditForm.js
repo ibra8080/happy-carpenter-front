@@ -32,16 +32,31 @@ function ProfileEditForm() {
           const { name, content, image, user_type, years_of_experience, specialties, portfolio_url, interests, address } = data;
           setProfileData({ name, content, image, user_type, years_of_experience, specialties, portfolio_url, interests, address });
         } else {
-          console.log("No current user profile found");
-          navigate("/");
+          // If no profile found, set default values
+          setProfileData({
+            name: currentUser?.username || "",
+            content: "",
+            image: "",
+            user_type: "amateur",
+            years_of_experience: "",
+            specialties: "",
+            portfolio_url: "",
+            interests: [],
+            address: "",
+          });
+          console.log("No current user profile found, using default values");
         }
       } catch (err) {
         console.log("Error fetching profile:", err);
-        navigate("/");
+        setErrors({ message: "Failed to fetch profile data" });
       }
     };
+        
     fetchProfile();
-  }, [currentUser, navigate]);
+  }, [currentUser]);
+  
+  
+  
 
   const handleChange = (event) => {
     setProfileData({

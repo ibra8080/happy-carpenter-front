@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Container, Row, Col, Image, Button, Card, Modal } from "react-bootstrap";
+import { Container, Row, Col, Image, Button, Card, Modal, Alert } from "react-bootstrap";
 import { axiosReq } from "../../api/axiosDefaults";
 import { useCurrentUser, useSetCurrentUser } from "../../contexts/CurrentUserContext";
 import Asset from "../../components/Asset";
@@ -10,18 +10,23 @@ import styles from "../../styles/ProfileDetail.module.css";
 function ProfileDetail() {
   const { id } = useParams();
   const [profile, setProfile] = useState(null);
+  const [error, setError] = useState(null);
   const currentUser = useCurrentUser();
   const setCurrentUser = useSetCurrentUser();
-  const is_owner = currentUser?.username === profile?.owner;
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const { data } = await axiosReq.get(`/profiles/${id}/`);
         setProfile(data);
+        setError(null);
       } catch (err) {
-        console.log(err);
+        console.log("Error fetching profile:", err);
+        setError("Failed to fetch profile. Please try again.");
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchProfile();
@@ -29,13 +34,12 @@ function ProfileDetail() {
 
   const handleSoftDelete = async () => {
     try {
-      // Instead of actual deletion, we're just updating the local state
+      await axiosReq.patch(`/profiles/${id}/`, { is_active: false });
       setProfile(prevProfile => ({
         ...prevProfile,
         is_active: false
       }));
-      // Update current user context if it's the owner's profile
-      if (is_owner) {
+      if (currentUser?.profile?.id === parseInt(id)) {
         setCurrentUser(prevUser => ({
           ...prevUser,
           profile: {
@@ -46,11 +50,16 @@ function ProfileDetail() {
       }
       setShowDeleteModal(false);
     } catch (err) {
-      console.log(err);
+      console.log("Error deleting profile:", err);
+      setError("Failed to delete profile. Please try again.");
     }
   };
 
-  if (!profile) return <Asset spinner />;
+  const is_owner = currentUser?.profile?.id === parseInt(id);
+
+  if (isLoading) return <Asset spinner />;
+  if (error) return <Alert variant="warning">{error}</Alert>;
+  if (!profile) return <Alert variant="warning">Profile not found</Alert>;
 
   return (
     <Container className={appStyles.Content}>
@@ -59,7 +68,7 @@ function ProfileDetail() {
           <Image src={profile.image} alt={profile.owner} rounded fluid className={styles.ProfileImage} />
         </Col>
         <Col md={8}>
-          <h2>{profile.owner}</h2>
+          <h2>{profile.name || profile.owner}</h2>
           <p>{profile.user_type}</p>
           <p>{profile.content}</p>
           <Card className={styles.ProfileDetails}>
@@ -71,7 +80,7 @@ function ProfileDetail() {
                   <strong>Portfolio:</strong> <a href={profile.portfolio_url} target="_blank" rel="noopener noreferrer">View Portfolio</a>
                 </Card.Text>
               )}
-              <Card.Text><strong>Interests:</strong> {profile.interests.join(", ") || 'Not specified'}</Card.Text>
+              <Card.Text><strong>Interests:</strong> {profile.interests?.join(", ") || 'Not specified'}</Card.Text>
               <Card.Text><strong>Address:</strong> {profile.address || 'Not specified'}</Card.Text>
             </Card.Body>
           </Card>
