@@ -1,14 +1,48 @@
+.reviewForm {
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
 .starRating {
-    display: inline-block;
-    font-size: 24px;
-    cursor: pointer;
-  }
-  
-  .starRating i {
-    color: #ddd;
-    margin-right: 5px;
-  }
-  
-  .starRating i.active {
-    color: #ffd700;
-  }
+  display: inline-block;
+  font-size: 24px;
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+
+.starRating i {
+  color: #ddd;
+  margin-right: 5px;
+  transition: color 0.2s ease-in-out;
+}
+
+.starRating i:hover,
+.starRating i.active {
+  color: var(--secondary-color);
+}
+
+.reviewForm textarea {
+  width: 100%;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 15px;
+  color: var(--text-color);
+}
+
+.reviewForm button {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.reviewForm button:hover {
+  background-color: var(--secondary-color);
+}
