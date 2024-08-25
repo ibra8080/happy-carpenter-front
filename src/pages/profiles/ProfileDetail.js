@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Container, Row, Col, Image, Button, Card, Modal, Alert } from "react-bootstrap";
+import ReviewForm from "./ReviewForm";
+import JobOfferForm from "./JobOfferForm";
 import { axiosReq } from "../../api/axiosDefaults";
 import { useCurrentUser, useSetCurrentUser } from "../../contexts/CurrentUserContext";
 import Asset from "../../components/Asset";
@@ -15,6 +17,7 @@ function ProfileDetail() {
   const setCurrentUser = useSetCurrentUser();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -29,7 +32,18 @@ function ProfileDetail() {
         setIsLoading(false);
       }
     };
+
+    const fetchReviews = async () => {
+      try {
+        const { data } = await axiosReq.get(`/reviews/?professional=${id}`);
+        setReviews(data.results);
+      } catch (err) {
+        console.log("Error fetching reviews:", err);
+      }
+    };
+
     fetchProfile();
+    fetchReviews();
   }, [id]);
 
   const handleSoftDelete = async () => {
@@ -53,6 +67,10 @@ function ProfileDetail() {
       console.log("Error deleting profile:", err);
       setError("Failed to delete profile. Please try again.");
     }
+  };
+
+  const handleReviewAdded = (newReview) => {
+    setReviews(prevReviews => [newReview, ...prevReviews]);
   };
 
   const is_owner = currentUser?.profile?.id === parseInt(id);
@@ -99,6 +117,36 @@ function ProfileDetail() {
           )}
         </Col>
       </Row>
+
+      {profile.user_type === 'professional' && (
+        <>
+          <Row className="mt-4">
+            <Col>
+              <h3>Reviews</h3>
+              <ReviewForm professionalId={profile.id} onReviewAdded={handleReviewAdded} />
+              {reviews.map((review) => (
+                <div key={review.id} className={styles.review}>
+                  <div className={styles.starRating}>
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <i
+                        key={star}
+                        className={`fas fa-star ${star <= review.rating ? styles.active : ''}`}
+                      ></i>
+                    ))}
+                  </div>
+                  <p>{review.content}</p>
+                </div>
+              ))}
+            </Col>
+          </Row>
+          <Row className="mt-4">
+            <Col>
+              <h3>Send Job Offer</h3>
+              <JobOfferForm professionalId={profile.id} />
+            </Col>
+          </Row>
+        </>
+      )}
 
       <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
         <Modal.Header closeButton>

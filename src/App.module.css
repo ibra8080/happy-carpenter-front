@@ -79,3 +79,18 @@ i:hover {
   transition: color ease-in-out 0.3s;
   color: var(--primary-color);
 }
+
+.starRating {
+  display: inline-block;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.starRating i {
+  color: #ddd;
+  margin-right: 5px;
+}
+
+.starRating i.active {
+  color: #ffd700;
+}
