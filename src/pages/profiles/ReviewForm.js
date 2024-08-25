@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import { axiosReq } from '../../api/axiosDefaults';
 import styles from '../../styles/ReviewForm.module.css';
+import btnStyles from "../../styles/Button.module.css";
+
 
 function ReviewForm({ professionalId, onReviewAdded }) {
   console.log('Professional ID:', professionalId);
@@ -70,7 +72,7 @@ function ReviewForm({ professionalId, onReviewAdded }) {
       </Form.Group>
       {error && <Alert variant="danger">{error}</Alert>}
       {success && <Alert variant="success">{success}</Alert>}
-      <Button type="submit">Submit Review</Button>
+      <Button className={`${btnStyles.Button} ${btnStyles.Blue}`} type="submit">Submit Review</Button>
     </Form>
   );
 }

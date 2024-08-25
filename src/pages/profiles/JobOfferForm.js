@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import { axiosReq } from '../../api/axiosDefaults';
 import styles from '../../styles/JobOfferForm.module.css';
+import btnStyles from "../../styles/Button.module.css";
+
 
 function JobOfferForm({ professionalId }) {
   const [jobOfferData, setJobOfferData] = useState({
@@ -68,7 +70,7 @@ function JobOfferForm({ professionalId }) {
           placeholder="Enter budget"
         />
       </Form.Group>
-      <Button type="submit">Send Job Offer</Button>
+      <Button className={`${btnStyles.Button} ${btnStyles.Blue}`} type="submit">Send Job Offer</Button>
       {submitted && <Alert variant="success">Job offer sent successfully!</Alert>}
       {error && <Alert variant="danger">{error}</Alert>}
     </Form>
