@@ -6,6 +6,7 @@ import { useCurrentUser, useSetCurrentUser } from "../../contexts/CurrentUserCon
 import appStyles from "../../App.module.css";
 import styles from "../../styles/ProfileEditForm.module.css";
 
+
 function ProfileEditForm() {
   const { id } = useParams();
   const currentUser = useCurrentUser();
@@ -86,12 +87,17 @@ function ProfileEditForm() {
       }));
       navigate(`/profiles/${id}`);
     } catch (err) {
-      console.log(err);
-      if (err.response?.status !== 401) {
-        setErrors(err.response?.data);
+      console.log("Error updating profile:", err);
+      if (err.response?.status === 403) {
+        setErrors({ message: "You don't have permission to edit this profile." });
+      } else if (err.response?.data) {
+        setErrors(err.response.data);
+      } else {
+        setErrors({ message: "An error occurred while updating the profile." });
       }
     }
   };
+
 
   const handleImageChange = (event) => {
     if (event.target.files.length) {

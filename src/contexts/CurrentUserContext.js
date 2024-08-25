@@ -12,18 +12,39 @@ export const CurrentUserProvider = ({ children }) => {
 
   const handleMount = async () => {
     try {
-      const { data } = await axiosRes.get("dj-rest-auth/user/");
-      setCurrentUser(data);
-      const profileResponse = await axiosReq.get(`/profiles/${data.pk}/`);
-      setCurrentUser(prevUser => ({
-        ...prevUser,
-        profile: profileResponse.data
-      }));
+      const { data: userData } = await axiosRes.get("dj-rest-auth/user/");
+      console.log("User data fetched:", userData);
+  
+      if (userData?.pk) {
+        try {
+          const profileId = userData.pk + 2;
+          const { data: profileData } = await axiosReq.get(`/profiles/${profileId}/`);
+          console.log("Profile data fetched:", profileData);
+          
+          const combinedData = {
+            ...userData,
+            profile: profileData
+          };
+          
+          setCurrentUser(combinedData);
+          console.log("Combined user and profile data:", combinedData);
+        } catch (err) {
+          console.log("Error fetching profile:", err);
+          if (err.response?.status === 404) {
+            console.log("Profile not found for user. They might need to create one.");
+          }
+          setCurrentUser(userData);
+        }
+      } else {
+        console.log("No user PK found in user data");
+        setCurrentUser(null);
+      }
     } catch (err) {
-      console.log("Error fetching user or profile:", err);
+      console.log("Error fetching user:", err);
+      setCurrentUser(null);
     }
   };
-
+  
   useEffect(() => {
     handleMount();
   }, []);
