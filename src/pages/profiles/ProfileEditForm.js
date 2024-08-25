@@ -6,7 +6,6 @@ import { useCurrentUser, useSetCurrentUser } from "../../contexts/CurrentUserCon
 import appStyles from "../../App.module.css";
 import styles from "../../styles/ProfileEditForm.module.css";
 
-
 function ProfileEditForm() {
   const { id } = useParams();
   const currentUser = useCurrentUser();
@@ -30,21 +29,8 @@ function ProfileEditForm() {
       try {
         if (currentUser?.profile?.id) {
           const { data } = await axiosReq.get(`/profiles/${currentUser.profile.id}/`);
-          const { name, content, image, user_type, years_of_experience, specialties, portfolio_url, interests, address } = data;
-          setProfileData({ name, content, image, user_type, years_of_experience, specialties, portfolio_url, interests, address });
+          setProfileData(data);
         } else {
-          // If no profile found, set default values
-          setProfileData({
-            name: currentUser?.username || "",
-            content: "",
-            image: "",
-            user_type: "amateur",
-            years_of_experience: "",
-            specialties: "",
-            portfolio_url: "",
-            interests: [],
-            address: "",
-          });
           console.log("No current user profile found, using default values");
         }
       } catch (err) {
@@ -52,17 +38,14 @@ function ProfileEditForm() {
         setErrors({ message: "Failed to fetch profile data" });
       }
     };
-        
     fetchProfile();
   }, [currentUser]);
-  
-  
-  
 
   const handleChange = (event) => {
+    const { name, value, type, files } = event.target;
     setProfileData({
       ...profileData,
-      [event.target.name]: event.target.value,
+      [name]: type === "file" ? files[0] : value,
     });
   };
 
@@ -80,42 +63,28 @@ function ProfileEditForm() {
     }
 
     try {
-      const { data } = await axiosReq.put(`/profiles/${id}/`, formData);
+      const { data } = await axiosReq.put(`/profiles/${id}/`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       setCurrentUser(prevUser => ({
         ...prevUser,
         profile: data
       }));
       navigate(`/profiles/${id}`);
     } catch (err) {
-      console.log("Error updating profile:", err);
-      if (err.response?.status === 403) {
-        setErrors({ message: "You don't have permission to edit this profile." });
-      } else if (err.response?.data) {
-        setErrors(err.response.data);
-      } else {
-        setErrors({ message: "An error occurred while updating the profile." });
+      console.error("Error updating profile:", err);
+      if (err.response?.status === 400) {
+        console.error("Bad request data:", err.response.data);
       }
+      setErrors(err.response?.data || { message: "An error occurred while updating the profile." });
     }
   };
-
-
-  const handleImageChange = (event) => {
-    if (event.target.files.length) {
-      URL.revokeObjectURL(profileData.image);
-      setProfileData({
-        ...profileData,
-        image: URL.createObjectURL(event.target.files[0])
-      });
-    }
-  };
-
-  if (!currentUser?.profile || currentUser.profile.id !== parseInt(id)) {
-    return <Alert variant="warning">You are not authorized to edit this profile.</Alert>;
-  }
 
   return (
     <Container className={appStyles.Content}>
-      <Form onSubmit={handleSubmit} className={styles.Form}>
+      <Form onSubmit={handleSubmit} encType="multipart/form-data" className={styles.Form}>
         <Form.Group>
           <Form.Label>Name</Form.Label>
           <Form.Control
@@ -154,10 +123,12 @@ function ProfileEditForm() {
               <Image src={profileData.image} fluid />
             </figure>
           )}
-          <Form.File
+          <Form.Control
+            type="file"
             id="image-upload"
             accept="image/*"
-            onChange={handleImageChange}
+            onChange={handleChange}
+            name="image"
           />
         </Form.Group>
         {errors?.image?.map((message, idx) => (
