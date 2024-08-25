@@ -68,7 +68,12 @@ function ProfileDetail() {
           <Image src={profile.image} alt={profile.owner} rounded fluid className={styles.ProfileImage} />
         </Col>
         <Col md={8}>
-          <h2>{profile.name || profile.owner}</h2>
+          <h2>
+            {profile.name || profile.owner}
+            {profile.user_type === 'professional' && (
+              <i className="fas fa-briefcase ml-2" title="Professional"></i>
+            )}
+          </h2>
           <p>{profile.user_type}</p>
           <p>{profile.content}</p>
           <Card className={styles.ProfileDetails}>
