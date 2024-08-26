@@ -175,3 +175,69 @@ Happy Carpenter offers a range of features to support the woodworking community:
 - Professionals can advertise their work through featured listings or sponsored content
 - Users can follow each other to stay updated on specific woodworkers' activities
 
+## Tools & Technologies Used
+
+- [![Markdown Builder](https://img.shields.io/badge/Markdown_Builder-grey?logo=markdown&logoColor=000000)](https://tim.2bn.dev/markdown-builder) used to generate README and TESTING templates.
+- [![Git](https://img.shields.io/badge/Git-grey?logo=git&logoColor=F05032)](https://git-scm.com) used for version control. (`git add`, `git commit`, `git push`)
+- [![GitHub](https://img.shields.io/badge/GitHub-grey?logo=github&logoColor=181717)](https://github.com) used for secure online code storage.
+- ⚠️⚠️ IDE: CHOOSE ONLY ONE <-- delete me ⚠️⚠️
+- [![Gitpod](https://img.shields.io/badge/Gitpod-grey?logo=gitpod&logoColor=FFAE33)](https://gitpod.io) used as a cloud-based IDE for development.
+- [![HTML](https://img.shields.io/badge/HTML-grey?logo=html5&logoColor=E34F26)](https://en.wikipedia.org/wiki/HTML) used for the main site content.
+- [![CSS](https://img.shields.io/badge/CSS-grey?logo=css3&logoColor=1572B6)](https://en.wikipedia.org/wiki/CSS) used for the main site design and layout.
+- [![JavaScript](https://img.shields.io/badge/JavaScript-grey?logo=javascript&logoColor=F7DF1E)](https://www.javascript.com) used for user interaction on the site.
+- [![jQuery](https://img.shields.io/badge/jQuery-grey?logo=jquery&logoColor=0769AD)](https://jquery.com) used for user interaction on the site.
+- [![Heroku](https://img.shields.io/badge/Heroku-grey?logo=heroku&logoColor=430098)](https://www.heroku.com) used for hosting the deployed back-end site.
+- [![Bootstrap](https://img.shields.io/badge/Bootstrap-grey?logo=bootstrap&logoColor=7952B3)](https://getbootstrap.com) used as the front-end CSS framework for modern responsiveness and pre-built components.
+- [![Jest](https://img.shields.io/badge/Jest-grey?logo=jest&logoColor=c21325)](https://jestjs.io) used for automated JavaScript testing.
+- [![PostgreSQL by Code Institute](https://img.shields.io/badge/PostgreSQL_by_Code_Institute-grey?logo=okta&logoColor=F05223)](https://dbs.ci-dbs.net) used as the Postgres database from Code Institute.
+- [![Cloudinary](https://img.shields.io/badge/Cloudinary-grey?logo=cloudinary&logoColor=3448C5)](https://cloudinary.com) used for online static file storage.
+- [![Figma](https://img.shields.io/badge/Figma-grey?logo=figma&logoColor=F24E1E)](https://www.figma.com) used for creating wireframes.
+- [![Font Awesome](https://img.shields.io/badge/Font_Awesome-grey?logo=fontawesome&logoColor=528DD7)](https://fontawesome.com) used for the icons.
+- [![ChatGPT](https://img.shields.io/badge/ChatGPT-grey?logo=chromatic&logoColor=75A99C)](https://chat.openai.com) used to help debug, troubleshoot, and explain things.
+
+## Setup and Installation
+
+To get the Happy Carpenter application running on your local machine, follow these steps:
+
+### Prerequisites
+
+- Node.js (v14.0.0 or later)
+- npm (usually comes with Node.js)
+- Git
+
+### Clone the Repository
+
+1. Open your terminal
+2. Clone the repository:
+git clone https://github.com/ibra8080/happy-carpenter-front.git
+3. Navigate to the project directory:
+cd happy-carpenter-front
+### Install Dependencies
+
+Install the project dependencies:
+npm install
+### Set Up Environment Variables
+
+1. Create a `.env` file in the root directory of the project
+2. Add the following variables to the `.env` file:
+REACT_APP_API_URL=https://happy-carpenter-ebf6de9467cb.herokuapp.com
+Replace the URL with your API URL if different.
+
+### Run the Application
+
+Start the development server: npmstart
+The application should now be running on [http://localhost:3000](http://localhost:3000).
+
+### Building for Production
+
+To create a production build:npm run build
+This will create a `build` directory with a production build of your app.
+
+### Connect to the Backend
+
+Ensure that the backend API is running and accessible. You may need to update the `REACT_APP_API_URL` in the `.env` file to point to your local backend server if you're running it locally.
+
+### Additional Notes
+
+- Make sure you have the necessary API keys and access to any external services used in the project.
+- If you encounter any CORS issues, ensure that your backend is configured to accept requests from your frontend's URL.
