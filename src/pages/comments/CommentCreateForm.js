@@ -8,7 +8,7 @@ import { axiosRes } from "../../api/axiosDefaults";
 import { useCurrentUser } from "../../contexts/CurrentUserContext";
 
 function CommentCreateForm(props) {
-  const { post, setPost, setComments, profileImage, profile_id } = props;
+  const { post, setPost, setComments } = props;
   const [content, setContent] = useState("");
   const currentUser = useCurrentUser();
 
@@ -22,7 +22,8 @@ function CommentCreateForm(props) {
       const { data } = await axiosRes.post("/comments/", {
         content,
         post,
-        owner: currentUser.pk, // Use the user ID, not the profile ID
+        // Use the user's pk (which is the user ID) when creating the comment
+        owner: currentUser.pk,
       });
       setComments((prevComments) => ({
         ...prevComments,
@@ -30,8 +31,9 @@ function CommentCreateForm(props) {
           {
             ...data,
             owner: currentUser.username,
-            profile_id: currentUser.profile_id,
-            profile_image: currentUser.profile_image,
+            // Use profile.id which should be the correct profile ID
+            profile_id: currentUser.profile.id,
+            profile_image: currentUser.profile.image,
           },
           ...prevComments.results,
         ],
@@ -53,8 +55,8 @@ function CommentCreateForm(props) {
     <Form className="mt-2" onSubmit={handleSubmit}>
       <Form.Group>
         <InputGroup>
-          <Link to={`/profiles/${profile_id}`}>
-            <Avatar src={profileImage} />
+          <Link to={`/profiles/${currentUser?.profile?.id}`}>
+            <Avatar src={currentUser?.profile?.image} />
           </Link>
           <Form.Control
             className={styles.Form}

@@ -2,7 +2,7 @@ import React from 'react';
 import styles from '../styles/Post.module.css';
 import { useCurrentUser } from '../contexts/CurrentUserContext';
 import { Card, Media, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Avatar from './Avatar';
 import { axiosRes } from '../api/axiosDefaults';
 
@@ -24,18 +24,16 @@ const Post = (props) => {
 
   const currentUser = useCurrentUser();
   const is_owner = currentUser?.username === owner;
-  
-  // eslint-disable-next-line no-unused-vars
+  const navigate = useNavigate();
+
   const handleEdit = () => {
-    // Functionality to be implemented
-    console.log("Edit functionality to be implemented");
+    navigate(`/posts/${id}/edit`);
   };
 
-  // eslint-disable-next-line no-unused-vars
   const handleDelete = async () => {
     try {
       await axiosRes.delete(`/posts/${id}/`);
-      // Redirect or update state after successful deletion
+      navigate('/');
     } catch (err) {
       console.log(err);
     }
@@ -44,8 +42,14 @@ const Post = (props) => {
   const handleLike = async () => {
     try {
       console.log(`Attempting to like post ${id}`);
-      const { data } = await axiosRes.post('/likes/', { post: id });
-      console.log('Like response:', data);
+      console.log('Current user:', currentUser);
+      const response = await axiosRes.post('/likes/', { 
+        post: id,
+        owner: currentUser?.pk // Send the user's primary key (ID)
+      });
+      console.log('Full response:', response);
+      const { data } = response;
+      console.log('Like response data:', data);
       setPosts((prevPosts) => ({
         ...prevPosts,
         results: prevPosts.results.map((post) => {
@@ -57,11 +61,18 @@ const Post = (props) => {
     } catch (err) {
       console.error("Error in handleLike:", err.response?.data || err.message);
       console.error("Full error object:", err);
+      if (err.response) {
+        console.error("Response status:", err.response.status);
+        console.error("Response headers:", err.response.headers);
+      }
     }
   };
+  
+  
 
   const handleUnlike = async () => {
     try {
+      console.log(`Attempting to unlike post ${id}`);
       await axiosRes.delete(`/likes/${like_id}/`);
       setPosts((prevPosts) => ({
         ...prevPosts,
@@ -71,8 +82,10 @@ const Post = (props) => {
             : post;
         }),
       }));
+      console.log('Post unliked successfully');
     } catch (err) {
       console.error("Error in handleUnlike:", err.response?.data || err.message);
+      console.error("Full error object:", err);
     }
   };
 
