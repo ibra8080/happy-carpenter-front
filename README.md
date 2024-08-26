@@ -75,4 +75,28 @@ Happy Carpenter caters to:
 
 ### Design Choices
 
-(Here you would describe your color scheme, typography, and any specific design decisions you made for the user interface. If you have this information, please provide it and I'll incorporate it into this section.)
+The design of Happy Carpenter is crafted to reflect the warmth and craftsmanship of woodworking while maintaining a modern, user-friendly interface.
+
+#### Logo
+
+The Happy Carpenter logo comes in two versions:
+1. Primary logo: Full logotype with text
+2. Icon: A simplified icon version for smaller spaces or favicon use
+
+#### Color Scheme
+
+The color palette is chosen to evoke the feel of wood and craftsmanship:
+
+- Primary Color: #a60d0d (Deep Red)
+- Secondary Color: #D69723 (Warm Gold)
+- Text Color: #3f3f3f (Dark Gray)
+- Background Color: #fffcec (Soft Cream)
+
+This color combination provides a warm, inviting feel while ensuring good readability and contrast.
+
+#### Typography
+
+The primary font used throughout the application is Poppins, a clean and modern sans-serif typeface that offers excellent readability across different screen sizes.
+
+```html
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
