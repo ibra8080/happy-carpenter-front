@@ -39,8 +39,8 @@ I've tested my deployed project on multiple devices to check for responsiveness 
 
 | Device | Home | Profile | Posts | Notes |
 | --- | --- | --- | --- | --- |
-| Mobile (DevTools) | ![screenshot](documentation/responsiveness/responsive-mobile-home.png) | ![screenshot](documentation/responsiveness/responsive-mobile-contact.png) | ![screenshot](documentation/responsiveness/responsive-mobile-etc.png) | Works as expected |
-| Tablet (DevTools) | ![screenshot](documentation/responsiveness/responsive-tablet-home.png)  | ![screenshot](documentation/responsiveness/responsive-tablet-contact.png) | ![screenshot](documentation/responsiveness/responsive-tablet-etc.png) | Works as expected |
+| Mobile (DevTools) | ![screenshot](src/assets/documentation/responsiveness/mob_h.png) | ![screenshot](src/assets/documentation/responsiveness/mob_pr.png) | ![screenshot](src/assets/documentation/responsiveness/mob_po.png) | Works as expected |
+| Tablet (DevTools) | ![screenshot](src/assets/documentation/responsiveness/tab_h.png)  | ![screenshot](src/assets/documentation/responsiveness/tab_pr.png) | ![screenshot](src/assets/documentation/responsiveness/tab_po.png) | Works as expected |
 | Desktop | ![screenshot](src/assets/documentation/browsers/home_chrome.png) | ![screenshot](src/assets/documentation/browsers/profile_chrome.png) | ![screenshot](src/assets/documentation/browsers/posts_chrome.png) | Works as expected |
 
 ## Lighthouse Audit
