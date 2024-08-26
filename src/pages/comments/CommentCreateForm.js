@@ -5,10 +5,12 @@ import InputGroup from "react-bootstrap/InputGroup";
 import styles from "../../styles/CommentCreateEditForm.module.css";
 import Avatar from "../../components/Avatar";
 import { axiosRes } from "../../api/axiosDefaults";
+import { useCurrentUser } from "../../contexts/CurrentUserContext";
 
 function CommentCreateForm(props) {
   const { post, setPost, setComments, profileImage, profile_id } = props;
   const [content, setContent] = useState("");
+  const currentUser = useCurrentUser();
 
   const handleChange = (event) => {
     setContent(event.target.value);
@@ -20,18 +22,26 @@ function CommentCreateForm(props) {
       const { data } = await axiosRes.post("/comments/", {
         content,
         post,
+        owner: currentUser.pk, // Use the user ID, not the profile ID
       });
       setComments((prevComments) => ({
         ...prevComments,
-        results: [data, ...prevComments.results],
-      }));
-      setPost((prevPost) => ({
         results: [
           {
-            ...prevPost.results[0],
-            comments_count: prevPost.results[0].comments_count + 1,
+            ...data,
+            owner: currentUser.username,
+            profile_id: currentUser.profile_id,
+            profile_image: currentUser.profile_image,
           },
+          ...prevComments.results,
         ],
+      }));
+      setPost((prevPost) => ({
+        ...prevPost,
+        results: [{
+          ...prevPost.results[0],
+          comments_count: prevPost.results[0].comments_count + 1,
+        }],
       }));
       setContent("");
     } catch (err) {

@@ -2,7 +2,7 @@ import React from 'react';
 import styles from '../styles/Post.module.css';
 import { useCurrentUser } from '../contexts/CurrentUserContext';
 import { Card, Media, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Avatar from './Avatar';
 import { axiosRes } from '../api/axiosDefaults';
 
@@ -19,22 +19,23 @@ const Post = (props) => {
     content,
     image,
     updated_at,
-    postPage,
     setPosts,
   } = props;
 
   const currentUser = useCurrentUser();
   const is_owner = currentUser?.username === owner;
-  const navigate = useNavigate();
-
+  
+  // eslint-disable-next-line no-unused-vars
   const handleEdit = () => {
-    navigate(`/posts/${id}/edit`);
+    // Functionality to be implemented
+    console.log("Edit functionality to be implemented");
   };
 
+  // eslint-disable-next-line no-unused-vars
   const handleDelete = async () => {
     try {
       await axiosRes.delete(`/posts/${id}/`);
-      navigate('/');
+      // Redirect or update state after successful deletion
     } catch (err) {
       console.log(err);
     }
@@ -42,7 +43,9 @@ const Post = (props) => {
 
   const handleLike = async () => {
     try {
+      console.log(`Attempting to like post ${id}`);
       const { data } = await axiosRes.post('/likes/', { post: id });
+      console.log('Like response:', data);
       setPosts((prevPosts) => ({
         ...prevPosts,
         results: prevPosts.results.map((post) => {
@@ -52,7 +55,8 @@ const Post = (props) => {
         }),
       }));
     } catch (err) {
-      console.log(err);
+      console.error("Error in handleLike:", err.response?.data || err.message);
+      console.error("Full error object:", err);
     }
   };
 
@@ -68,7 +72,7 @@ const Post = (props) => {
         }),
       }));
     } catch (err) {
-      console.log(err);
+      console.error("Error in handleUnlike:", err.response?.data || err.message);
     }
   };
 
@@ -82,7 +86,7 @@ const Post = (props) => {
           </Link>
           <div className="d-flex align-items-center">
             <span className={styles.Date}>{updated_at}</span>
-            {is_owner && postPage && (
+            {is_owner && (
               <>
                 <OverlayTrigger
                   placement="top"
@@ -108,7 +112,7 @@ const Post = (props) => {
           className={styles.PostImage}
           onError={(e) => {
             e.target.onerror = null;
-            e.target.src = "https://res.cloudinary.com/ds5wgelgc/image/upload/v1722748736/default_post_ixahqa.jpg"; // Replace with your default image path
+            e.target.src = "https://res.cloudinary.com/ds5wgelgc/image/upload/v1722748736/default_post_ixahqa.jpg";
           }}
         />
       </Link>

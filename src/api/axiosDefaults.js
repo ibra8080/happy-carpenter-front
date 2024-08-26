@@ -62,3 +62,14 @@ axiosRes.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+axiosRes.interceptors.response.use(
+  (response) => {
+    console.log("Response received:", response);
+    return response;
+  },
+  (error) => {
+    console.error("Response error:", error.response || error);
+    return Promise.reject(error);
+  }
+);
