@@ -99,4 +99,79 @@ This color combination provides a warm, inviting feel while ensuring good readab
 The primary font used throughout the application is Poppins, a clean and modern sans-serif typeface that offers excellent readability across different screen sizes.
 
 ```html
-<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"> 
+```
+Poppins is used in various weights to create hierarchy and emphasis in the design:
+
+Headings: Bold (700) or Extra Bold (800)
+Body Text: Regular (400)
+Accents and Buttons: Medium (500) or Semi-Bold (600)
+
+## Features
+
+Happy Carpenter offers a range of features to support the woodworking community:
+
+### Components
+
+#### Navbar
+- Visible on every page for easy navigation
+- Displays logo, main navigation links, and user authentication options
+- Responsive design, collapsing into a hamburger menu on smaller screens
+
+#### Avatar
+- Displays user profile images throughout the site
+- Clickable to view user profiles
+
+#### Spinner Asset
+- Indicates loading states to improve user experience
+
+### User Authentication
+
+- Sign Up: Users can create new accounts
+- Sign In: Registered users can log into their accounts
+- Sign Out: Users can securely log out of the application
+
+### Posts
+
+- Create Post: Users can share their woodworking projects
+- View Posts: Browse through a feed of community posts
+- Like Posts: Show appreciation for other users' work
+- Comment on Posts: Engage in discussions about projects
+- Edit/Delete: Users can manage their own posts
+
+### Profile
+
+- View Profile: See user information and posted content
+- Edit Profile: Users can update their information and profile picture
+- Follow/Unfollow: Connect with other users
+
+### Professional Accounts
+
+- Professional Status: Users can identify as professional woodworkers
+- Enhanced Profile: Showcase professional skills and experience
+- Service Listings: Ability to list and manage woodworking services
+- Reviews and Ratings: Professionals can receive reviews and ratings from clients
+- Job Offers: Professionals can receive job offers through the platform
+
+### Search and Filter
+
+- Search Posts: Find specific content or users
+- Filter Posts: Narrow down posts by category or user preference
+
+### Responsive Design
+
+- The application is fully responsive, providing a seamless experience across desktop, tablet, and mobile devices
+
+### Accessibility
+
+- Semantic HTML for improved screen reader experience
+- Color contrast adhering to WCAG guidelines
+- Alt text for images
+
+### Future Features
+
+- Messaging system for direct user communication
+- Geolocation integration for localized service matching
+- Professionals can advertise their work through featured listings or sponsored content
+- Users can follow each other to stay updated on specific woodworkers' activities
+
