@@ -59,108 +59,27 @@ Defensive programming was manually tested with the below user acceptance testing
 | Page | Expectation | Test | Result | Fix | Screenshot |
 | --- | --- | --- | --- | --- | --- |
 | Sign in | | | | | |
-| | Users should not be able to submit an empty form | Attempted to submit form with empty fields | Form submission was prevented and error messages were displayed | Test concluded and passed | ![screenshot](documentation/features/signin_empty_form.png) |
-| | Users should see an error message for incorrect credentials | Entered incorrect username/password | An error message was displayed indicating invalid credentials | Test concluded and passed | ![screenshot](documentation/features/signin_invalid_credentials.png) |
+| | Users should not be able to submit an empty form | Attempted to submit form with empty fields | Form submission was prevented and error messages were displayed | Test concluded and passed | ![screenshot](src/assets/documentation/features/def_in_balnk.png) |
+| | Users should see an error message for incorrect credentials | Entered incorrect username/password | An error message was displayed indicating invalid credentials | Test concluded and passed | ![screenshot](src/assets/documentation/features/def_in_wrong.png) |
 | Sign up | | | | | |
-| | Users should not be able to sign up with a username that already exists | Attempted to create an account with an existing username | An error message was displayed indicating the username is taken | Test concluded and passed | ![screenshot](documentation/features/signup_existing_username.png) |
-| | Passwords should be required to match | Entered mismatching passwords in the password and confirm password fields | An error message was displayed indicating passwords do not match | Test concluded and passed | ![screenshot](documentation/features/signup_password_mismatch.png) |
+| | Users should not be able to sign up with a username that already exists | Attempted to create an account with an existing username | An error message was displayed indicating the username is taken | Test concluded and passed | ![screenshot](src/assets/documentation/features/def_up_same.png) |
+| | Passwords should be required to match | Entered mismatching passwords in the password and confirm password fields | An error message was displayed indicating passwords do not match | Test concluded and passed | ![screenshot](src/assets/documentation/features/def_up_pass.png) |
 | Create Post | | | | | |
-| | Users should not be able to create a post without an image | Attempted to submit a post without uploading an image | Form submission was prevented and an error message was displayed | Test concluded and passed | ![screenshot](documentation/features/create_post_no_image.png) |
-| | Post content should have a minimum length | Attempted to create a post with very short content | An error message was displayed indicating the minimum required length | Test concluded and passed | ![screenshot](documentation/features/create_post_short_content.png) |
-| Edit Profile | | | | | |
-| | Users should only be able to edit their own profile | Attempted to access edit page for another user's profile | User was redirected to their own profile page | Test concluded and passed | ![screenshot](documentation/features/edit_profile_unauthorized.png) |
-| | Profile updates should require current password | Attempted to update profile without entering current password | Form submission was prevented and an error message was displayed | Test concluded and passed | ![screenshot](documentation/features/edit_profile_password_required.png) |
+| | Users should not be able to create a post with an image larger than 2 MB| Attempted to submit a post with an larg image | Form submission was prevented and an error message was displayed | Test concluded and passed | ![screenshot](src/assets/documentation/features/def_larg_img.png) |
 
-
-🛑🛑🛑🛑🛑🛑🛑🛑🛑🛑-START OF NOTES (to be deleted)
-
-Another way of performing defensive testing is a simple Pass/Fail for each test.
-The assessors prefer the above method, with the full test explained, but this is also acceptable in most cases.
-
-When in doubt, use the above method instead, and delete the table below.
-
-🛑🛑🛑🛑🛑🛑🛑🛑🛑🛑-END OF NOTES (to be deleted)
-
-| Page | User Action | Expected Result | Pass/Fail | Comments |
-| --- | --- | --- | --- | --- |
-| Home | | | | |
-| | Click on Logo | Redirection to Home page | Pass | |
-| | Click on Home link in navbar | Redirection to Home page | Pass | |
-| Gallery | | | | |
-| | Click on Gallery link in navbar | Redirection to Gallery page | Pass | |
-| | Load gallery images | All images load as expected | Pass | |
-| Contact | | | | |
-| | Click on Contact link in navbar | Redirection to Contact page | Pass | |
-| | Enter first/last name | Field will accept freeform text | Pass | |
-| | Enter valid email address | Field will only accept email address format | Pass | |
-| | Enter message in textarea | Field will accept freeform text | Pass | |
-| | Click the Submit button | Redirects user to form-dump | Pass | User must click 'Back' button to return |
-| Sign Up | | | | |
-| | Click on Sign Up button | Redirection to Sign Up page | Pass | |
-| | Enter valid email address | Field will only accept email address format | Pass | |
-| | Enter valid password (twice) | Field will only accept password format | Pass | |
-| | Click on Sign Up button | Asks user to confirm email page | Pass | Email sent to user |
-| | Confirm email | Redirects user to blank Sign In page | Pass | |
-| Log In | | | | |
-| | Click on the Login link | Redirection to Login page | Pass | |
-| | Enter valid email address | Field will only accept email address format | Pass | |
-| | Enter valid password | Field will only accept password format | Pass | |
-| | Click Login button | Redirects user to home page | Pass | |
-| Log Out | | | | |
-| | Click Logout button | Redirects user to logout page | Pass | Confirms logout first |
-| | Click Confirm Logout button | Redirects user to home page | Pass | |
-| Profile | | | | |
-| | Click on Profile button | User will be redirected to the Profile page | Pass | |
-| | Click on the Edit button | User will be redirected to the edit profile page | Pass | |
-| | Click on the My Orders link | User will be redirected to the My Orders page | Pass | |
-| | Brute forcing the URL to get to another user's profile | User should be given an error | Pass | Redirects user back to own profile |
-| repeat for all remaining pages | x | x | x | x |
-
-🛑🛑🛑🛑🛑🛑🛑🛑🛑🛑-START OF NOTES (to be deleted)
-
-Repeat for all other tests, as applicable to your own site.
-The aforementioned tests are just an example of a few different project scenarios.
-
-🛑🛑🛑🛑🛑🛑🛑🛑🛑🛑-END OF NOTES (to be deleted)
 
 ## User Story Testing
 
-🛑🛑🛑🛑🛑🛑🛑🛑🛑🛑-START OF NOTES (to be deleted)
-
-Testing user stories is actually quite simple, once you've already got the stories defined on your README.
-
-Most of your project's **features** should already align with the **user stories**,
-so this should as simple as creating a table with the user story, matching with the re-used screenshot
-from the respective feature.
-
-🛑🛑🛑🛑🛑🛑🛑🛑🛑🛑-END OF NOTES (to be deleted)
-
 | User Story | Screenshot |
 | --- | --- |
-| As a new site user, I would like to ____________, so that I can ____________. | ![screenshot](documentation/features/feature01.png) |
-| As a new site user, I would like to ____________, so that I can ____________. | ![screenshot](documentation/features/feature02.png) |
-| As a new site user, I would like to ____________, so that I can ____________. | ![screenshot](documentation/features/feature03.png) |
-| As a returning site user, I would like to ____________, so that I can ____________. | ![screenshot](documentation/features/feature04.png) |
-| As a returning site user, I would like to ____________, so that I can ____________. | ![screenshot](documentation/features/feature05.png) |
-| As a returning site user, I would like to ____________, so that I can ____________. | ![screenshot](documentation/features/feature06.png) |
-| As a site administrator, I should be able to ____________, so that I can ____________. | ![screenshot](documentation/features/feature07.png) |
-| As a site administrator, I should be able to ____________, so that I can ____________. | ![screenshot](documentation/features/feature08.png) |
-| As a site administrator, I should be able to ____________, so that I can ____________. | ![screenshot](documentation/features/feature09.png) |
-| repeat for all remaining user stories | x |
+| As a new site user, I want to register for an account, so that I can access the platform's features. | ![screenshot](src/assets/documentation/features/up.png) |
+| As a returning site user, I want to log in to my account, so that I can access my personalized content and interactions. | ![screenshot](src/assets/documentation/features/in.png) |
+| As a user, I want to create a new post with a photo and description, so that I can share my woodworking projects with the community. | ![screenshot](src/assets/documentation/features/add.png) |
+| As a user, I want to view the details of a specific post, so that I can get more information about a project and engage with it. | ![screenshot](src/assets/documentation/features/dpost.png) |
+| As a user, I want to like posts to show my appreciation for other users' work. | ![screenshot](src/assets/documentation/features/like_com.png) |
+| As a logged-in user, I want to add comments to a post, so that I can share my thoughts and engage in discussions about the projects. | ![screenshot](src/assets/documentation/features/like_com.png) |
 
 ## Bugs
-
-🛑🛑🛑🛑🛑🛑🛑🛑🛑🛑-START OF NOTES (to be deleted)
-
-This section is primarily used for JavaScript and Python applications,
-but feel free to use this section to document any HTML/CSS bugs you might run into.
-
-It's very important to document any bugs you've discovered while developing the project.
-Make sure to include any necessary steps you've implemented to fix the bug(s) as well.
-
-**PRO TIP**: screenshots of bugs are extremely helpful, and go a long way!
-
-🛑🛑🛑🛑🛑🛑🛑🛑🛑🛑-END OF NOTES (to be deleted)
 
 - JS Uncaught ReferenceError: `foobar` is undefined/not defined
 
