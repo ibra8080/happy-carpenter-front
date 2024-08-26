@@ -35,20 +35,6 @@ const NavBar = () => {
 
   const loggedInIcons = (
     <>
-      <NavLink
-        className={styles.NavLink}
-        to="/feed"
-        onClick={() => setExpanded(false)}
-      >
-        <i className="fas fa-stream"></i>Feed
-      </NavLink>
-      <NavLink
-        className={styles.NavLink}
-        to="/liked"
-        onClick={() => setExpanded(false)}
-      >
-        <i className="fas fa-heart"></i>Liked
-      </NavLink>
       {currentUser?.profile ? (
       <NavLink
         className={styles.NavLink}
