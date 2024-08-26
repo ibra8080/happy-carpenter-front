@@ -80,121 +80,87 @@ Defensive programming was manually tested with the below user acceptance testing
 | As a logged-in user, I want to add comments to a post, so that I can share my thoughts and engage in discussions about the projects. | ![screenshot](src/assets/documentation/features/like_com.png) |
 
 ## Bugs
+**Bugs**
 
-- JS Uncaught ReferenceError: `foobar` is undefined/not defined
+* JS Uncaught ReferenceError: 400 (Bad Request)
 
-    ![screenshot](documentation/bugs/bug01.png)
+   * To fix this, I need to review the registration form submission process, particularly the email field which seems to be causing an issue. The backend is reporting that the email field may not be blank.
 
-    - To fix this, I _____________________.
+   ![Registration Error](documentation/bugs/registration_error.png)
 
-- JS `'let'` or `'const'` or `'template literal syntax'` or `'arrow function syntax (=>)'` is available in ES6 (use `'esversion: 11'`) or Mozilla JS extensions (use moz).
+* JS `'token_not_valid'` error when trying to access user data
 
-    ![screenshot](documentation/bugs/bug02.png)
+   * To fix this, I need to implement proper token refresh logic in the frontend. The current access token is not valid, which could be due to expiration or improper storage/retrieval.
 
-    - To fix this, I _____________________.
+   ![Token Invalid Error](documentation/bugs/token_invalid_error.png)
 
-- Python `'ModuleNotFoundError'` when trying to import module from imported package
+* Form submission issues in the registration process
 
-    ![screenshot](documentation/bugs/bug03.png)
+   * To fix this, I need to ensure all required fields are properly filled out before submission. The registration form should validate all fields, including email, before sending the request to the backend.
 
-    - To fix this, I _____________________.
+   ![Registration Form](documentation/bugs/registration_form.png)
 
-- Django `TemplateDoesNotExist` at /appname/path appname/template_name.html
+* User authentication state not properly maintained
 
-    ![screenshot](documentation/bugs/bug04.png)
+   * To fix this, I need to implement proper state management for user authentication. After successful login, the user's authenticated state should be maintained and reflected in the UI (as seen in the navbar with the user's name and avatar).
 
-    - To fix this, I _____________________.
+   ![Authentication State](documentation/bugs/authentication_state.png)
 
-- Python `E501 line too long` (93 > 79 characters)
+* Responsive design issues on mobile devices
 
-    ![screenshot](documentation/bugs/bug04.png)
+   * To fix this, I need to review and adjust the CSS for mobile views. The registration form appears to be cut off on smaller screens, indicating a need for better responsive design implementation.
 
-    - To fix this, I _____________________.
+   ![Mobile View](documentation/bugs/mobile_view.png)
 
-### GitHub **Issues**
+**Bugs**
 
-🛑🛑🛑🛑🛑🛑🛑🛑🛑🛑-START OF NOTES (to be deleted)
+* JS Error: Request failed with status code 404 on sign-in attempt
 
-An improved way to manage bugs is to use the built-in **Issues** tracker on your GitHub repository.
-To access your Issues, click on the "Issues" tab at the top of your repository.
-Alternatively, use this link: https://github.com/ibra8080/happycarpenter/issues
+   * To fix this, I need to verify the API endpoint for sign-in is correct and accessible. The 404 error suggests the endpoint might not exist or the server is not responding as expected.
 
-If using the Issues tracker for your bug management, you can simplify the documentation process.
-Issues allow you to directly paste screenshots into the issue without having to first save the screenshot locally,
-then uploading into your project.
+   ![Sign In Error](src/assets/documentation/bugs/signin_error.png)
 
-You can add labels to your issues (`bug`), assign yourself as the owner, and add comments/updates as you progress with fixing the issue(s).
 
-Once you've sorted the issue, you should then "Close" it.
+* Error fetching profile: Request failed with status code 500
 
-When showcasing your bug tracking for assessment, you can use the following format:
+   * To fix this, I need to investigate the server-side error causing the 500 status. This could be due to incorrect data handling, database issues, or other server-side problems.
 
-🛑🛑🛑🛑🛑🛑🛑🛑🛑🛑-END OF NOTES (to be deleted)
+   ![Profile Fetch Error](src/assets/documentation/bugs/profile_fetch_error.png)
 
-**Fixed Bugs**
+* Console warnings about Avatar src
 
-[![GitHub issue custom search](https://img.shields.io/github/issues-search?query=repo%3Aibra8080%2Fhappycarpenter%20label%3Abug&label=bugs)](https://github.com/ibra8080/happycarpenter/issues?q=is%3Aissue+is%3Aclosed+label%3Abug)
+   * To fix this, I need to ensure that all avatar image URLs are valid and accessible. The console shows multiple warnings about Avatar src, which might indicate broken image links or incorrect URL formatting.
 
-All previously closed/fixed bugs can be tracked [here](https://github.com/ibra8080/happycarpenter/issues?q=is%3Aissue+is%3Aclosed).
+   ![Avatar Warnings](src/assets/documentation/bugs/avatar_warnings.png)
 
-| Bug | Status |
-| --- | --- |
-| [JS Uncaught ReferenceError: `foobar` is undefined/not defined](https://github.com/ibra8080/happycarpenter/issues/1) | Closed |
-| [Python `'ModuleNotFoundError'` when trying to import module from imported package](https://github.com/ibra8080/happycarpenter/issues/2) | Closed |
-| [Django `TemplateDoesNotExist` at /appname/path appname/template_name.html](https://github.com/ibra8080/happycarpenter/issues/3) | Closed |
+* Authentication state inconsistency
 
-**Open Issues**
+   * To fix this, I need to implement proper state management for user authentication. The console shows conflicting messages about the user's auth status.
 
-[![GitHub issues](https://img.shields.io/github/issues/ibra8080/happycarpenter)](https://github.com/ibra8080/happycarpenter/issues)
-[![GitHub closed issues](https://img.shields.io/github/issues-closed/ibra8080/happycarpenter)](https://github.com/ibra8080/happycarpenter/issues?q=is%3Aissue+is%3Aclosed)
+   ![Auth State Inconsistency](src/assets/documentation/bugs/auth_state_inconsistency.png)
 
-Any remaining open issues can be tracked [here](https://github.com/ibra8080/happycarpenter/issues).
+* Login Forbidden Error: POST request to login endpoint returns 403 status
 
-| Bug | Status |
-| --- | --- |
-| [JS `'let'` or `'const'` or `'template literal syntax'` or `'arrow function syntax (=>)'` is available in ES6 (use `'esversion: 11'`) or Mozilla JS extensions (use moz).](https://github.com/ibra8080/happycarpenter/issues/4) | Open |
-| [Python `E501 line too long` (93 > 79 characters)](https://github.com/ibra8080/happycarpenter/issues/5) | Open |
+   * To fix this, I need to investigate why the server is forbidding access to the login endpoint. This could be due to CORS issues, incorrect API credentials, or server-side authentication problems.
+
+   ![Login Forbidden Error](src/assets/documentation/bugs/login_forbidden_error.png)
+
+
 
 ## Unfixed Bugs
 
-🛑🛑🛑🛑🛑🛑🛑🛑🛑🛑-START OF NOTES (to be deleted)
+### Unfixed Bugs
 
-You will need to mention unfixed bugs and why they were not fixed.
-This section should include shortcomings of the frameworks or technologies used.
-Although time can be a big variable to consider, paucity of time and difficulty understanding
-implementation is not a valid reason to leave bugs unfixed.
+- User needs to manually refresh the home page after signing in to see the signed-in version of the home page.
 
-If you've identified any unfixed bugs, no matter how small, be sure to list them here.
-It's better to be honest and list them, because if it's not documented and an assessor finds the issue,
-they need to know whether or not you're aware of them as well, and why you've not corrected/fixed them.
 
-Some examples:
+    - Attempted fix: I tried implementing automatic redirection after sign-in, but it led to issues with state management. A more robust solution involving React Router and global state management is needed.
 
-🛑🛑🛑🛑🛑🛑🛑🛑🛑🛑-END OF NOTES (to be deleted)
+- Like functionality is inconsistent and doesn't always update correctly.
 
-- On devices smaller than 375px, the page starts to have `overflow-x` scrolling.
 
-    ![screenshot](documentation/bugs/unfixed-bug01.png)
+    - Attempted fix: I've tried updating the state locally after a like action, but it sometimes gets out of sync with the backend. A real-time update mechanism or optimistic UI updates might resolve this issue.
 
-    - Attempted fix: I tried to add additional media queries to handle this, but things started becoming too small to read.
-
-- For PP3, when using a helper `clear()` function, any text above the height of the terminal does not clear, and remains when you scroll up.
-
-    ![screenshot](documentation/bugs/unfixed-bug02.png)
-
-    - Attempted fix: I tried to adjust the terminal size, but it only resizes the actual terminal, not the allowable area for text.
-
-- When validating HTML with a semantic `section` element, the validator warns about lacking a header `h2-h6`. This is acceptable.
-
-    ![screenshot](documentation/bugs/unfixed-bug03.png)
-
-    - Attempted fix: this is a known warning and acceptable, and my section doesn't require a header since it's dynamically added via JS.
-
-🛑🛑🛑🛑🛑🛑🛑🛑🛑🛑-START OF NOTES (to be deleted)
-
-If you legitimately cannot find any unfixed bugs or warnings, then use the following sentence:
-
-🛑🛑🛑🛑🛑🛑🛑🛑🛑🛑-END OF NOTES (to be deleted)
 
 > [!NOTE]  
 > There are no remaining bugs that I am aware of.
