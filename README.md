@@ -1,8 +1,8 @@
 # [HAPPYCARPENTER](https://happy-carpenter-front-26472ba73a7c.herokuapp.com)
 
-[![GitHub commit activity](https://img.shields.io/github/commit-activity/t/ibra8080/happycarpenter)](https://github.com/ibra8080/happycarpenter/commits/main)
-[![GitHub last commit](https://img.shields.io/github/last-commit/ibra8080/happycarpenter)](https://github.com/ibra8080/happycarpenter/commits/main)
-[![GitHub repo size](https://img.shields.io/github/repo-size/ibra8080/happycarpenter)](https://github.com/ibra8080/happycarpenter)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/t/ibra8080/happy-carpenter-front)](https://github.com/ibra8080/happy-carpenter-front/commits/main)
+[![GitHub last commit](https://img.shields.io/github/last-commit/ibra8080/happy-carpenter-front)](https://github.com/ibra8080/happy-carpenter-front/commits/main)
+[![GitHub repo size](https://img.shields.io/github/repo-size/ibra8080/happy-carpenter-front)](https://github.com/ibra8080/happy-carpenter-front)
 
 
 ![screenshot](src/assets/documentation/readme/resposivness.png)
